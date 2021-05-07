@@ -1,14 +1,14 @@
 <template>
-  <q-layout view='lHh Lpr lFf'>
+  <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
-          aria-label='Menu'
+          aria-label="Menu"
           dense
           flat
-          icon='menu'
+          icon="menu"
           round
-          @click='toggleLeftDrawer'
+          @click="toggleLeftDrawer"
         />
 
         <q-toolbar-title>
@@ -20,24 +20,18 @@
     </q-header>
 
     <q-drawer
-      v-model='leftDrawerOpen'
+      v-model="leftDrawerOpen"
       bordered
-      class='bg-grey-1'
+      class="bg-grey-1"
       show-if-above
     >
       <q-list>
         <q-item-label
-          class='text-grey-8'
+          class="text-grey-8"
           header
         >
           Essential Links
         </q-item-label>
-
-        <EssentialLink
-          v-for='link in essentialLinks'
-          :key='link.title'
-          v-bind='link'
-        />
       </q-list>
     </q-drawer>
 
@@ -47,71 +41,19 @@
   </q-layout>
 </template>
 
-<script lang='ts'>
-import EssentialLink from 'components/EssentialLink.vue';
+<script lang="ts">
 import { defineComponent, ref } from 'vue';
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
-
   setup() {
     const leftDrawerOpen = ref(false);
+    const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 
     return {
-      essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      }
+      toggleLeftDrawer
     };
   }
 });

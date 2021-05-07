@@ -2,7 +2,7 @@
   <div>Login success, redirecting</div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { useStore } from 'src/store';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -15,12 +15,8 @@ export default {
     onMounted(() => {
       store.dispatch('user/handleSignIn')
         .then(() => router.push({ name: 'home' }))
-        .catch(() => console.log('error'));
+        .catch(() => router.push({ name: 'error', params: { code: '401' } }));
     });
   }
 };
 </script>
-
-<style scoped>
-
-</style>
