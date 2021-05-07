@@ -8,6 +8,11 @@ const oidcRoutes: RouteRecordRaw = {
       name: 'signin',
       path: 'signin',
       component: () => import('pages/Oidc/SignIn.vue')
+    },
+    {
+      name: 'signout',
+      path: 'signout',
+      component: () => import('pages/Oidc/SignOut.vue')
     }
   ]
 };

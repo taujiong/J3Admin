@@ -1,5 +1,5 @@
 <template>
-  <div>Login success, redirecting</div>
+  <div>Logout success, redirecting</div>
 </template>
 
 <script lang="ts">
@@ -8,13 +8,13 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
-  name: 'SignIn',
+  name: 'SignOut',
   setup() {
     const router = useRouter();
     onMounted(() => {
-      authService.handleLogin()
+      authService.handleLogout()
         .then(() => router.push({ name: 'home' }))
-        .catch(() => router.push({ name: 'error', params: { code: '401' } }));
+        .catch(() => router.push({ name: 'error', params: { code: '500' } }));
     });
   }
 };
