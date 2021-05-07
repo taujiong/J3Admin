@@ -3,9 +3,9 @@ import { StateInterface } from '../index';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
-import state, { ExampleStateInterface } from './state';
+import state, { UserStateInterface } from './state';
 
-const exampleModule: Module<ExampleStateInterface, StateInterface> = {
+const user: Module<UserStateInterface, StateInterface> = {
   namespaced: true,
   actions,
   getters,
@@ -13,4 +13,4 @@ const exampleModule: Module<ExampleStateInterface, StateInterface> = {
   state
 };
 
-export default exampleModule;
+export default user;

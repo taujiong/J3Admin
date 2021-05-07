@@ -54,23 +54,19 @@ module.exports = configure(function(ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'history', // available values: 'hash', 'history'
+      vueRouterMode: 'history',
 
-      // transpile: false,
-
-      // Add dependencies for transpiling with Babel (Array of string/regex)
-      // (from node_modules, which are by default not transpiled).
-      // Applies only if "transpile" is set to true.
-      // transpileDependencies: [],
-
-      // rtl: true, // https://v2.quasar.dev/options/rtl-support
-      // preloadChunks: true,
-      // showProgress: false,
-      // gzip: true,
-      // analyze: true,
-
-      // Options below are automatically set depending on the env, set them if you want to override
-      // extractCSS: false,
+      env: {
+        AUTHORITY_URL: ctx.dev
+          ? 'https://j3space.dev'
+          : 'https://trilliontang.work',
+        APP_BASE_URL: ctx.dev
+          ? 'https://www.j3space.dev'
+          : 'https://www.trilliontang.work',
+        API_BASE_URL: ctx.dev
+          ? 'https://api.j3space.dev'
+          : 'https://api.trilliontang.work'
+      },
 
       // https://v2.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
