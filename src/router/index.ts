@@ -1,9 +1,8 @@
 import { route } from 'quasar/wrappers';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
-import { StateInterface } from '../store';
 import routes from './routes';
 
-export default route<StateInterface>(function(/* { store, ssrContext } */) {
+export default route(function(/* { store, ssrContext } */) {
   const createHistory =
     process.env.SERVER
       ? createMemoryHistory

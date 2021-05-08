@@ -1,28 +1,28 @@
 import { AxiosInstance } from 'axios';
 import { ApplicationConfigurationDto } from 'src/models';
-import { httpService } from 'src/services/http-service';
-import { readonly } from 'vue';
+import { readonly, ref } from 'vue';
 
-class AbpConfigurationService {
-  private readonly httpService: AxiosInstance;
-  private readonly baseUrl: string;
+export const abpConfigurationServiceToken = Symbol('abp-application-service');
 
-  constructor(baseUrl: string, axiosInstance: AxiosInstance) {
-    this.baseUrl = baseUrl;
-    this.httpService = axiosInstance;
+export class AbpConfigurationService {
+  private readonly axiosInstance: AxiosInstance;
+  private readonly baseUrl = '/api/abp/application-configuration';
+
+  constructor(axiosInstance: AxiosInstance) {
+    this.axiosInstance = axiosInstance;
   }
 
-  private _configuration: ApplicationConfigurationDto = <ApplicationConfigurationDto>{};
-
+  private _configuration = ref<ApplicationConfigurationDto>(<ApplicationConfigurationDto>{});
   get configuration() {
-    return readonly<ApplicationConfigurationDto>(this._configuration);
+    return readonly(this._configuration);
   }
 
   async loadConfiguration() {
-    const response = await this.httpService.get<ApplicationConfigurationDto>(this.baseUrl);
-    this._configuration = response.data;
+    const response = await this.axiosInstance.get<ApplicationConfigurationDto>(this.baseUrl);
+    this._configuration.value = response.data;
   }
 }
 
-const baseUrl = '/api/abp/application-configuration';
-export const abpConfigurationService = new AbpConfigurationService(baseUrl, httpService);
+export function createAbpConfigurationService(axiosInstance: AxiosInstance) {
+  return new AbpConfigurationService(axiosInstance);
+}

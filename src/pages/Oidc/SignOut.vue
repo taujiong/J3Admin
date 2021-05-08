@@ -3,14 +3,17 @@
 </template>
 
 <script lang="ts">
-import { authService } from 'src/services';
+import { AuthService, authServiceToken } from 'src/services';
+import { useInject } from 'src/utils';
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'SignOut',
   setup() {
+    const authService = useInject<AuthService>(authServiceToken);
     const router = useRouter();
+
     onMounted(() => {
       authService.handleLogout()
         .then(() => router.push({ name: 'home' }))

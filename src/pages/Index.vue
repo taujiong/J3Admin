@@ -6,24 +6,17 @@
 </template>
 
 <script lang="ts">
-import { useQuasar } from 'quasar';
-import { abpConfigurationService, authService } from 'src/services';
-import { defineComponent, onMounted, ref } from 'vue';
+import { AbpConfigurationService, abpConfigurationServiceToken, AuthService, authServiceToken } from 'src/services';
+import { useInject } from 'src/utils';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Index',
   setup() {
-    const $q = useQuasar();
-    let configureValue = ref('');
-
-    onMounted(async () => {
-      $q.loading.show();
-      await abpConfigurationService.loadConfiguration();
-      configureValue.value = JSON.stringify(abpConfigurationService.configuration.currentUser);
-      $q.loading.hide();
-    });
-
-    const btnName = authService.authenticated ? 'logout' : 'login';
+    const authService = useInject<AuthService>(authServiceToken);
+    const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
+    let configureValue = abpConfigurationService.configuration.value.currentUser;
+    let btnName = authService.user.value?.profile.name;
     const btnAction = () => authService.authenticated ? authService.logout() : authService.login();
 
     return { btnAction, btnName, configureValue };

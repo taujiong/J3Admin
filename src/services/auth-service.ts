@@ -1,21 +1,22 @@
 import { User, UserManager, UserManagerSettings } from 'oidc-client';
-import { readonly } from 'vue';
+import { readonly, ref } from 'vue';
 
-class AuthService {
+export const authServiceToken = Symbol('auth-service');
+
+export class AuthService {
   private readonly userManager: UserManager;
 
   constructor(oidcSettings: UserManagerSettings) {
     this.userManager = new UserManager(oidcSettings);
   }
 
-  private _user: User | null = null;
-
+  private _user = ref<User | null>();
   get user() {
-    return this._user ? readonly<User>(this._user) : null;
+    return readonly(this._user);
   }
 
   get authenticated() {
-    return this._user !== null;
+    return this.user.value !== null;
   }
 
   async login() {
@@ -25,13 +26,11 @@ class AuthService {
 
   async handleLogin() {
     await this.userManager.signinCallback();
-    this.refreshUser();
+    await this.refreshUser();
   }
 
-  refreshUser() {
-    this.userManager.getUser()
-      .then(user => this._user = user)
-      .catch(error => console.log(error));
+  async refreshUser() {
+    this._user.value = await this.userManager.getUser();
   }
 
   async logout() {
@@ -40,21 +39,10 @@ class AuthService {
 
   async handleLogout() {
     await this.userManager.signoutCallback();
-    this.refreshUser();
+    await this.refreshUser();
   }
 }
 
-const appBaseUrl = process.env.APP_BASE_URL;
-const oidcSettings: UserManagerSettings = {
-  authority: process.env.AUTHORITY_URL,
-  client_id: 'J3Admin',
-  client_secret: process.env.DEV ? 'dev_admin' : 'secret',
-  redirect_uri: `${ appBaseUrl }/oidc/signin`,
-  post_logout_redirect_uri: `${ appBaseUrl }/oidc/signout`,
-  silent_redirect_uri: `${ appBaseUrl }/oidc/renew`,
-  automaticSilentRenew: true,
-  response_type: 'code',
-  scope: 'openid profile offline_access J3Admin J3Blogging J3Guard'
-};
-
-export const authService = new AuthService(oidcSettings);
+export function createAuthService(oidcSettings: UserManagerSettings) {
+  return new AuthService(oidcSettings);
+}
