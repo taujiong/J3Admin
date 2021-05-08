@@ -1,15 +1,21 @@
 import { User, UserManager, UserManagerSettings } from 'oidc-client';
+import { readonly } from 'vue';
 
 class AuthService {
-  private userManager: UserManager;
-  private user: User | null = null;
+  private readonly userManager: UserManager;
 
   constructor(oidcSettings: UserManagerSettings) {
     this.userManager = new UserManager(oidcSettings);
   }
 
+  private _user: User | null = null;
+
+  get user() {
+    return this._user ? readonly<User>(this._user) : null;
+  }
+
   get authenticated() {
-    return this.user !== null;
+    return this._user !== null;
   }
 
   async login() {
@@ -24,7 +30,7 @@ class AuthService {
 
   refreshUser() {
     this.userManager.getUser()
-      .then(user => this.user = user)
+      .then(user => this._user = user)
       .catch(error => console.log(error));
   }
 
