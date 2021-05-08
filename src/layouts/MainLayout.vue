@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh Lpr lFf">
-    <q-header elevated>
+    <q-header>
       <q-toolbar>
         <q-btn
           aria-label="Menu"
@@ -12,10 +12,22 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          J3Admin
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="q-gutter-sm row items-center no-wrap">
+          <!-- 全屏 -->
+          <q-btn
+            v-if="$q.screen.gt.sm"
+            :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+            color="white"
+            dense
+            flat
+            round
+            @click="$q.fullscreen.toggle()"
+          >
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -51,10 +63,7 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer
-    };
+    return { leftDrawerOpen, toggleLeftDrawer };
   }
 });
 </script>
