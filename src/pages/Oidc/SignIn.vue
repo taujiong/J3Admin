@@ -4,10 +4,10 @@
 
 <script lang="ts">
 import { authService } from 'src/services';
-import { onMounted } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-export default {
+export default defineComponent({
   name: 'SignIn',
   setup() {
     const router = useRouter();
@@ -17,5 +17,5 @@ export default {
         .catch(() => router.push({ name: 'error', params: { code: '401' } }));
     });
   }
-};
+});
 </script>
