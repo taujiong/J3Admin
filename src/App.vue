@@ -23,7 +23,7 @@ export default defineComponent({
   name: 'App',
   setup() {
     const authService = createAuthService(oidcSettings);
-    const axiosInstance = createHttpService(axiosConfig);
+    const axiosInstance = createHttpService(axiosConfig, authService.authorizationHeader);
     const abpConfigurationService = createAbpConfigurationService(axiosInstance);
 
     useProvider<AuthService>(authServiceToken, authService);

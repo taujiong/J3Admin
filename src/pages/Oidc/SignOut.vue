@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { AuthService, authServiceToken } from 'src/services';
+import { AbpConfigurationService, abpConfigurationServiceToken, AuthService, authServiceToken } from 'src/services';
 import { useInject } from 'src/utils';
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -12,11 +12,15 @@ export default defineComponent({
   name: 'SignOut',
   setup() {
     const authService = useInject<AuthService>(authServiceToken);
+    const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
     const router = useRouter();
 
     onMounted(() => {
       authService.handleLogout()
-        .then(() => router.push({ name: 'home' }))
+        .then(async () => {
+          await abpConfigurationService.loadConfiguration();
+          await router.push({ name: 'home' });
+        })
         .catch(() => router.push({ name: 'error', params: { code: '500' } }));
     });
   }

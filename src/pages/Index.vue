@@ -1,6 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    {{ configureValue }}
+    {{ configuration.currentUser.isAuthenticated }}
     <q-btn @click="btnAction">{{ btnName }}</q-btn>
   </q-page>
 </template>
@@ -15,11 +15,12 @@ export default defineComponent({
   setup() {
     const authService = useInject<AuthService>(authServiceToken);
     const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
-    let configureValue = abpConfigurationService.configuration.value.currentUser;
-    let btnName = authService.user.value?.profile.name;
-    const btnAction = () => authService.authenticated ? authService.logout() : authService.login();
 
-    return { btnAction, btnName, configureValue };
+    const configuration = abpConfigurationService.configuration;
+    let btnName = configuration.value.currentUser.isAuthenticated ? 'Logout' : 'login';
+    const btnAction = () => configuration.value.currentUser.isAuthenticated ? authService.logout() : authService.login();
+
+    return { btnAction, btnName, configuration };
   }
 });
 </script>

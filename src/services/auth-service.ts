@@ -1,22 +1,18 @@
-import { User, UserManager, UserManagerSettings } from 'oidc-client';
+import { UserManager, UserManagerSettings } from 'oidc-client';
 import { readonly, ref } from 'vue';
 
 export const authServiceToken = Symbol('auth-service');
 
 export class AuthService {
   private readonly userManager: UserManager;
+  private _authorizationHeader = ref('');
 
   constructor(oidcSettings: UserManagerSettings) {
     this.userManager = new UserManager(oidcSettings);
   }
 
-  private _user = ref<User | null>();
-  get user() {
-    return readonly(this._user);
-  }
-
-  get authenticated() {
-    return this.user.value !== null;
+  get authorizationHeader() {
+    return readonly(this._authorizationHeader);
   }
 
   async login() {
@@ -30,7 +26,10 @@ export class AuthService {
   }
 
   async refreshUser() {
-    this._user.value = await this.userManager.getUser();
+    const user = await this.userManager.getUser();
+    this._authorizationHeader.value = user
+      ? `${ user.token_type } ${ user.access_token }`
+      : '';
   }
 
   async logout() {
