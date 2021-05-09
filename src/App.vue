@@ -48,8 +48,14 @@ export default defineComponent({
       () => languageService.updateI18n()
     );
 
+    const onBeforeUnload = () => {
+      languageService.saveState();
+    };
+
     const finished = ref(false);
     onMounted(async () => {
+      window.addEventListener('beforeunload', onBeforeUnload);
+
       const $q = useQuasar();
       $q.loading.show();
       await authService.refreshUser();

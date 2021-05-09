@@ -7,3 +7,5 @@ export default {
   'zh-Hans': zhHans,
   'zh-Hant': zhHant
 };
+
+export const defaultLanguageKey = 'zh-Hans';

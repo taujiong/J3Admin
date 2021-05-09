@@ -1,14 +1,19 @@
 import { i18n } from 'boot/i18n';
+import { LocalStorage } from 'quasar';
+import { defaultLanguageKey } from 'src/i18n';
 import { ApplicationLocalizationConfigurationDto, LanguageInfo } from 'src/models';
 import { computed, readonly, Ref, ref } from 'vue';
 
 export const languageServiceToken = Symbol('language-service');
 
 export class LanguageService {
+  private readonly storageName = 'current.language';
   private _localization = ref(<ApplicationLocalizationConfigurationDto>{});
 
   constructor(localization: Ref<ApplicationLocalizationConfigurationDto>) {
     this._localization = localization;
+    this._languageHeader.value = LocalStorage.getItem<string>(this.storageName)
+      ?? defaultLanguageKey;
   }
 
   private _languageHeader = ref('');
@@ -36,10 +41,14 @@ export class LanguageService {
   }
 
   updateI18n() {
-    const locale = this.currentCulture.value.cultureName ?? 'zh-Hans';
+    const locale = this.currentCulture.value.cultureName ?? defaultLanguageKey;
     const i18nRoot = i18n.global;
     i18nRoot.mergeLocaleMessage(locale, this.messages.value);
     i18nRoot.locale = locale;
+  }
+
+  saveState() {
+    LocalStorage.set(this.storageName, this.currentCulture.value?.cultureName ?? defaultLanguageKey);
   }
 }
 
