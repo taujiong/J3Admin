@@ -1,26 +1,22 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    {{ configuration.currentUser.isAuthenticated }}
-    <q-btn @click="btnAction">{{ btnName }}</q-btn>
+    Welcome {{ userName }}
   </q-page>
 </template>
 
 <script lang="ts">
-import { AbpConfigurationService, abpConfigurationServiceToken, AuthService, authServiceToken } from 'src/services';
+import { AbpConfigurationService, abpConfigurationServiceToken } from 'src/services';
 import { useInject } from 'src/utils';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'Index',
   setup() {
-    const authService = useInject<AuthService>(authServiceToken);
     const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
+    const currentUser = abpConfigurationService.currentUser;
+    const userName = ref(currentUser.value.isAuthenticated ? currentUser.value.userName : 'Anonymous');
 
-    const configuration = abpConfigurationService.configuration;
-    let btnName = configuration.value.currentUser.isAuthenticated ? 'Logout' : 'login';
-    const btnAction = () => configuration.value.currentUser.isAuthenticated ? authService.logout() : authService.login();
-
-    return { btnAction, btnName, configuration };
+    return { currentUser, userName };
   }
 });
 </script>

@@ -27,6 +27,8 @@
             @click="$q.fullscreen.toggle()"
           >
           </q-btn>
+
+          <UserMenu />
         </div>
       </q-toolbar>
     </q-header>
@@ -54,11 +56,12 @@
 </template>
 
 <script lang="ts">
+import UserMenu from 'components/UserMenu.vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
-
+  components: { UserMenu },
   setup() {
     const leftDrawerOpen = ref(false);
     const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
