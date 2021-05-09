@@ -10,15 +10,15 @@
       <q-list style="min-width: 100px;">
         <template v-if="currentUser.isAuthenticated">
           <q-item v-ripple clickable>
-            <q-item-section>Profile</q-item-section>
+            <q-item-section v-t="'AbpUi.PersonalInfo'"></q-item-section>
           </q-item>
           <q-item v-ripple clickable @click="logout">
-            <q-item-section>Logout</q-item-section>
+            <q-item-section v-t="'AbpUi.Logout'"></q-item-section>
           </q-item>
         </template>
         <template v-else>
           <q-item v-ripple clickable @click="login">
-            <q-item-section>Login</q-item-section>
+            <q-item-section v-t="'AbpUi.Login'"></q-item-section>
           </q-item>
         </template>
       </q-list>

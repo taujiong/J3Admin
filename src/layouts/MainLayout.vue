@@ -28,6 +28,7 @@
           >
           </q-btn>
 
+          <LanguageSwitcher />
           <UserMenu />
         </div>
       </q-toolbar>
@@ -56,12 +57,13 @@
 </template>
 
 <script lang="ts">
+import LanguageSwitcher from 'components/LanguageSwitcher.vue';
 import UserMenu from 'components/UserMenu.vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
-  components: { UserMenu },
+  components: { LanguageSwitcher, UserMenu },
   setup() {
     const leftDrawerOpen = ref(false);
     const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;

@@ -1,6 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    Welcome {{ userName }}
+    <div><span v-t="'AbpUi.Welcome'"></span> {{ userName }}</div>
   </q-page>
 </template>
 

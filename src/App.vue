@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts">
-import { AxiosInstance } from 'axios';
 import { useQuasar } from 'quasar';
 import { axiosConfig, oidcSettings } from 'src/presets';
 import {
@@ -14,21 +13,40 @@ import {
   createAbpConfigurationService,
   createAuthService,
   createHttpService,
+  HttpService,
   httpServiceToken
 } from 'src/services';
+import { createLanguageService, LanguageService, languageServiceToken } from 'src/services/language-service';
 import { useProvider } from 'src/utils';
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const authService = createAuthService(oidcSettings);
-    const axiosInstance = createHttpService(axiosConfig, authService.authorizationHeader);
-    const abpConfigurationService = createAbpConfigurationService(axiosInstance);
-
     useProvider<AuthService>(authServiceToken, authService);
-    useProvider<AxiosInstance>(httpServiceToken, axiosInstance);
+
+    const httpService = createHttpService(axiosConfig);
+    httpService.interceptRequest((config) => {
+      config.headers['Authorization'] = authService.authorizationHeader.value;
+      return config;
+    });
+    useProvider<HttpService>(httpServiceToken, httpService);
+
+    const abpConfigurationService = createAbpConfigurationService(httpService);
     useProvider<AbpConfigurationService>(abpConfigurationServiceToken, abpConfigurationService);
+
+    const languageService = createLanguageService(abpConfigurationService.localization);
+    useProvider<LanguageService>(languageServiceToken, languageService);
+    httpService.interceptRequest((config) => {
+      config.headers['Accept-Language'] = languageService.languageHeader.value;
+      return config;
+    });
+
+    watch(
+      () => languageService.currentCulture.value,
+      () => languageService.updateI18n()
+    );
 
     const finished = ref(false);
     onMounted(async () => {
