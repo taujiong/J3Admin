@@ -44,9 +44,42 @@ export class HttpService {
     return this._axiosInstance.request(config);
   }
 
-  interceptRequest(interception: (config: AxiosRequestConfig) => AxiosRequestConfig): number {
-    return this._axiosInstance.interceptors.request.use(interception);
+  useInterceptor(interceptor: HttpRequestInterceptor | HttpResponseInterceptor, ...dependencies: unknown[]) {
+    switch (interceptor.target) {
+      case 'request':
+        interceptor.id = this._axiosInstance.interceptors.request.use(interceptor.intercept(...dependencies));
+        break;
+      case 'response':
+        interceptor.id = this._axiosInstance.interceptors.response.use(interceptor.intercept(...dependencies));
+    }
   }
+
+  ejectInterceptor(interceptor: HttpRequestInterceptor | HttpResponseInterceptor) {
+    if (!interceptor.id) throw new Error(`interceptor ${ interceptor.name } has not been used yet`);
+
+    switch (interceptor.target) {
+      case 'request':
+        this._axiosInstance.interceptors.request.eject(interceptor.id);
+        break;
+      case 'response':
+        this._axiosInstance.interceptors.response.eject(interceptor.id);
+    }
+  }
+}
+
+interface HttpInterceptor<T> {
+  name: string,
+  readonly target: 'request' | 'response',
+  intercept: (...dependencies: unknown[]) => (value: T) => T | Promise<T>,
+  id?: number
+}
+
+export interface HttpRequestInterceptor extends HttpInterceptor<AxiosRequestConfig> {
+  target: 'request',
+}
+
+export interface HttpResponseInterceptor extends HttpInterceptor<AxiosResponse> {
+  target: 'response',
 }
 
 export const HttpServiceDescriptor: ServiceDescriptor<HttpService> = {

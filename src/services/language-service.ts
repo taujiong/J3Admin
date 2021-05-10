@@ -1,7 +1,9 @@
+import { AxiosRequestConfig } from 'axios';
 import { i18n } from 'boot/i18n';
 import { LocalStorage } from 'quasar';
 import { defaultLanguageKey } from 'src/i18n';
 import { ApplicationLocalizationConfigurationDto, LanguageInfo } from 'src/models';
+import { HttpRequestInterceptor } from 'src/services/http-service';
 import { ServiceDescriptor } from 'src/utils';
 import { computed, readonly, Ref, ref } from 'vue';
 
@@ -54,4 +56,18 @@ export class LanguageService {
 export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
   tokenKey: LanguageService.name,
   create: () => new LanguageService()
+};
+
+export const LanguageRequestInterceptor: HttpRequestInterceptor = {
+  name: LanguageService.name,
+  target: 'request',
+  intercept: (...dependencies) => {
+    if (dependencies.length !== 1) throw new Error('LanguageRequestInterceptor requires exactly 1 parameter with type "LanguageService"');
+
+    const languageService = dependencies[0] as LanguageService;
+    return (config: AxiosRequestConfig) => {
+      config.headers['Accept-Language'] = languageService.languageHeader.value;
+      return config;
+    };
+  }
 };

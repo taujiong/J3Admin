@@ -8,12 +8,15 @@ import { axiosConfig, oidcSettings } from 'src/presets';
 import {
   AbpConfigurationService,
   AbpConfigurationServiceDescriptor,
+  AuthRequestInterceptor,
   AuthService,
   AuthServiceDescriptor,
   HttpService,
-  HttpServiceDescriptor
+  HttpServiceDescriptor,
+  LanguageRequestInterceptor,
+  LanguageService,
+  LanguageServiceTokenDescriptor
 } from 'src/services';
-import { LanguageService, LanguageServiceTokenDescriptor } from 'src/services/language-service';
 import { useProvider } from 'src/utils';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
@@ -25,20 +28,14 @@ export default defineComponent({
 
     const httpService = useProvider<HttpService>(HttpServiceDescriptor, true, true);
     httpService.initialize(axiosConfig);
-    httpService.interceptRequest((config) => {
-      config.headers['Authorization'] = authService.authorizationHeader.value;
-      return config;
-    });
+    httpService.useInterceptor(AuthRequestInterceptor, authService);
 
     const abpConfigurationService = useProvider<AbpConfigurationService>(AbpConfigurationServiceDescriptor, true, true);
     abpConfigurationService.initialize(httpService);
 
     const languageService = useProvider<LanguageService>(LanguageServiceTokenDescriptor, true, true);
     languageService.initialize(abpConfigurationService.localization);
-    httpService.interceptRequest((config) => {
-      config.headers['Accept-Language'] = languageService.languageHeader.value;
-      return config;
-    });
+    httpService.useInterceptor(LanguageRequestInterceptor, languageService);
 
     watch(
       () => languageService.currentCulture.value,

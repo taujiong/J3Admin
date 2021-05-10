@@ -20,8 +20,12 @@
 
 <script lang="ts">
 import { LanguageInfo } from 'src/models';
-import { AbpConfigurationService, AbpConfigurationServiceDescriptor } from 'src/services';
-import { LanguageService, LanguageServiceTokenDescriptor } from 'src/services/language-service';
+import {
+  AbpConfigurationService,
+  AbpConfigurationServiceDescriptor,
+  LanguageService,
+  LanguageServiceTokenDescriptor
+} from 'src/services';
 import { useInjector } from 'src/utils';
 import { defineComponent } from 'vue';
 
