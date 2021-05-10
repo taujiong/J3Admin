@@ -20,16 +20,16 @@
 
 <script lang="ts">
 import { LanguageInfo } from 'src/models';
-import { AbpConfigurationService, abpConfigurationServiceToken } from 'src/services';
-import { LanguageService, languageServiceToken } from 'src/services/language-service';
+import { AbpConfigurationService, AbpConfigurationServiceDescriptor } from 'src/services';
+import { LanguageService, LanguageServiceTokenDescriptor } from 'src/services/language-service';
 import { useInject } from 'src/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'LanguageSwitcher',
   setup() {
-    const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
-    const languageService = useInject<LanguageService>(languageServiceToken);
+    const abpConfigurationService = useInject<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const languageService = useInject<LanguageService>(LanguageServiceTokenDescriptor);
 
     const allLanguages = languageService.languages;
     const currentLanguage = languageService.currentCulture;
@@ -37,6 +37,8 @@ export default defineComponent({
       languageService.switchLanguage(language);
       await abpConfigurationService.loadConfiguration();
     };
+
+    window.addEventListener('beforeunload', () => languageService.saveState());
 
     return { allLanguages, currentLanguage, switchLanguage };
   }

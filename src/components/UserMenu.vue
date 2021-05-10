@@ -27,16 +27,21 @@
 </template>
 
 <script lang="ts">
-import { AbpConfigurationService, abpConfigurationServiceToken, AuthService, authServiceToken } from 'src/services';
+import {
+  AbpConfigurationService,
+  AbpConfigurationServiceDescriptor,
+  AuthService,
+  AuthServiceDescriptor
+} from 'src/services';
 import { useInject } from 'src/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'UserMenu',
   setup() {
-    const authService = useInject<AuthService>(authServiceToken);
-    const abpConfigurationService = useInject<AbpConfigurationService>(abpConfigurationServiceToken);
-    const currentUser = abpConfigurationService.currentUser;
+    const authService = useInject<AuthService>(AuthServiceDescriptor);
+    const abpConfigurationService = useInject<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const currentUser = abpConfigurationService.currentUser.value;
     const login = () => authService.login();
     const logout = () => authService.logout();
 

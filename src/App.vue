@@ -7,37 +7,34 @@ import { useQuasar } from 'quasar';
 import { axiosConfig, oidcSettings } from 'src/presets';
 import {
   AbpConfigurationService,
-  abpConfigurationServiceToken,
+  AbpConfigurationServiceDescriptor,
   AuthService,
-  authServiceToken,
-  createAbpConfigurationService,
-  createAuthService,
-  createHttpService,
+  AuthServiceDescriptor,
   HttpService,
-  httpServiceToken
+  HttpServiceDescriptor
 } from 'src/services';
-import { createLanguageService, LanguageService, languageServiceToken } from 'src/services/language-service';
+import { LanguageService, LanguageServiceTokenDescriptor } from 'src/services/language-service';
 import { useProvider } from 'src/utils';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const authService = createAuthService(oidcSettings);
-    useProvider<AuthService>(authServiceToken, authService);
+    const authService = useProvider<AuthService>(AuthServiceDescriptor, true);
+    authService.initialize(oidcSettings);
 
-    const httpService = createHttpService(axiosConfig);
+    const httpService = useProvider<HttpService>(HttpServiceDescriptor, true);
+    httpService.initialize(axiosConfig);
     httpService.interceptRequest((config) => {
       config.headers['Authorization'] = authService.authorizationHeader.value;
       return config;
     });
-    useProvider<HttpService>(httpServiceToken, httpService);
 
-    const abpConfigurationService = createAbpConfigurationService(httpService);
-    useProvider<AbpConfigurationService>(abpConfigurationServiceToken, abpConfigurationService);
+    const abpConfigurationService = useProvider<AbpConfigurationService>(AbpConfigurationServiceDescriptor, true);
+    abpConfigurationService.initialize(httpService);
 
-    const languageService = createLanguageService(abpConfigurationService.localization);
-    useProvider<LanguageService>(languageServiceToken, languageService);
+    const languageService = useProvider<LanguageService>(LanguageServiceTokenDescriptor, true);
+    languageService.initialize(abpConfigurationService.localization);
     httpService.interceptRequest((config) => {
       config.headers['Accept-Language'] = languageService.languageHeader.value;
       return config;
@@ -48,14 +45,8 @@ export default defineComponent({
       () => languageService.updateI18n()
     );
 
-    const onBeforeUnload = () => {
-      languageService.saveState();
-    };
-
     const finished = ref(false);
     onMounted(async () => {
-      window.addEventListener('beforeunload', onBeforeUnload);
-
       const $q = useQuasar();
       $q.loading.show();
       await authService.refreshUser();

@@ -2,15 +2,19 @@ import { i18n } from 'boot/i18n';
 import { LocalStorage } from 'quasar';
 import { defaultLanguageKey } from 'src/i18n';
 import { ApplicationLocalizationConfigurationDto, LanguageInfo } from 'src/models';
+import { ServiceDescriptor } from 'src/utils';
 import { computed, readonly, Ref, ref } from 'vue';
 
-export const languageServiceToken = Symbol('language-service');
+export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
+  token: Symbol('language-service'),
+  create: () => new LanguageService()
+};
 
 export class LanguageService {
   private readonly storageName = 'current.language';
   private _localization = ref(<ApplicationLocalizationConfigurationDto>{});
 
-  constructor(localization: Ref<ApplicationLocalizationConfigurationDto>) {
+  initialize(localization: Ref<ApplicationLocalizationConfigurationDto>) {
     this._localization = localization;
     this._languageHeader.value = LocalStorage.getItem<string>(this.storageName)
       ?? defaultLanguageKey;
@@ -50,8 +54,4 @@ export class LanguageService {
   saveState() {
     LocalStorage.set(this.storageName, this.currentCulture.value?.cultureName ?? defaultLanguageKey);
   }
-}
-
-export function createLanguageService(localization: Ref<ApplicationLocalizationConfigurationDto>) {
-  return new LanguageService(localization);
 }

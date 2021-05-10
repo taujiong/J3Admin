@@ -1,11 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ServiceDescriptor } from 'src/utils';
 
-export const httpServiceToken = Symbol('http-service');
+export const HttpServiceDescriptor: ServiceDescriptor<HttpService> = {
+  token: Symbol('http-service'),
+  create: () => new HttpService()
+};
 
 export class HttpService {
-  private _axiosInstance: AxiosInstance;
+  private _axiosInstance!: AxiosInstance;
 
-  constructor(axiosConfig: AxiosRequestConfig) {
+  initialize(axiosConfig: AxiosRequestConfig) {
     this._axiosInstance = axios.create(axiosConfig);
   }
 
@@ -48,8 +52,4 @@ export class HttpService {
   interceptRequest(interception: (config: AxiosRequestConfig) => AxiosRequestConfig): number {
     return this._axiosInstance.interceptors.request.use(interception);
   }
-}
-
-export function createHttpService(axiosConfig: AxiosRequestConfig) {
-  return new HttpService(axiosConfig);
 }

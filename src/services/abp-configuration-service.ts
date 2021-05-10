@@ -1,15 +1,19 @@
 import { ApplicationConfigurationDto } from 'src/models';
 import { HttpService } from 'src/services/http-service';
+import { ServiceDescriptor } from 'src/utils';
 import { computed, ref } from 'vue';
 
-export const abpConfigurationServiceToken = Symbol('abp-application-service');
+export const AbpConfigurationServiceDescriptor: ServiceDescriptor<AbpConfigurationService> = {
+  token: Symbol('abp-application-service'),
+  create: () => new AbpConfigurationService()
+};
 
 export class AbpConfigurationService {
-  private readonly httpService: HttpService;
+  private httpService!: HttpService;
   private readonly baseUrl = '/api/abp/application-configuration';
   private _configuration = ref(<ApplicationConfigurationDto>{});
 
-  constructor(httpService: HttpService) {
+  initialize(httpService: HttpService) {
     this.httpService = httpService;
   }
 
@@ -25,8 +29,4 @@ export class AbpConfigurationService {
     const response = await this.httpService.get<ApplicationConfigurationDto>(this.baseUrl);
     this._configuration.value = response.data;
   }
-}
-
-export function createAbpConfigurationService(httpService: HttpService) {
-  return new AbpConfigurationService(httpService);
 }

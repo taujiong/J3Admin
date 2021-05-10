@@ -1,14 +1,18 @@
 import { UserManager, UserManagerSettings } from 'oidc-client';
+import { ServiceDescriptor } from 'src/utils';
 import { readonly, ref } from 'vue';
 
-export const authServiceToken = Symbol('auth-service');
+export const AuthServiceDescriptor: ServiceDescriptor<AuthService> = {
+  token: Symbol('auth-service'),
+  create: () => new AuthService()
+};
 
 export class AuthService {
-  private readonly userManager: UserManager;
+  private _userManager!: UserManager;
   private _authorizationHeader = ref('');
 
-  constructor(oidcSettings: UserManagerSettings) {
-    this.userManager = new UserManager(oidcSettings);
+  initialize(oidcSettings: UserManagerSettings) {
+    this._userManager = new UserManager(oidcSettings);
   }
 
   get authorizationHeader() {
@@ -16,32 +20,28 @@ export class AuthService {
   }
 
   async login() {
-    await this.userManager.clearStaleState();
-    await this.userManager.signinRedirect();
+    await this._userManager.clearStaleState();
+    await this._userManager.signinRedirect();
   }
 
   async handleLogin() {
-    await this.userManager.signinCallback();
+    await this._userManager.signinCallback();
     await this.refreshUser();
   }
 
   async refreshUser() {
-    const user = await this.userManager.getUser();
+    const user = await this._userManager.getUser();
     this._authorizationHeader.value = user
       ? `${ user.token_type } ${ user.access_token }`
       : '';
   }
 
   async logout() {
-    await this.userManager.signoutRedirect();
+    await this._userManager.signoutRedirect();
   }
 
   async handleLogout() {
-    await this.userManager.signoutCallback();
+    await this._userManager.signoutCallback();
     await this.refreshUser();
   }
-}
-
-export function createAuthService(oidcSettings: UserManagerSettings) {
-  return new AuthService(oidcSettings);
 }
