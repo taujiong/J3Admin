@@ -22,14 +22,14 @@
 import { LanguageInfo } from 'src/models';
 import { AbpConfigurationService, AbpConfigurationServiceDescriptor } from 'src/services';
 import { LanguageService, LanguageServiceTokenDescriptor } from 'src/services/language-service';
-import { useInject } from 'src/utils';
+import { useInjector } from 'src/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'LanguageSwitcher',
   setup() {
-    const abpConfigurationService = useInject<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
-    const languageService = useInject<LanguageService>(LanguageServiceTokenDescriptor);
+    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const languageService = useInjector<LanguageService>(LanguageServiceTokenDescriptor);
 
     const allLanguages = languageService.languages;
     const currentLanguage = languageService.currentCulture;

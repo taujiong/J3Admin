@@ -5,11 +5,6 @@ import { ApplicationLocalizationConfigurationDto, LanguageInfo } from 'src/model
 import { ServiceDescriptor } from 'src/utils';
 import { computed, readonly, Ref, ref } from 'vue';
 
-export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
-  token: Symbol('language-service'),
-  create: () => new LanguageService()
-};
-
 export class LanguageService {
   private readonly storageName = 'current.language';
   private _localization = ref(<ApplicationLocalizationConfigurationDto>{});
@@ -55,3 +50,8 @@ export class LanguageService {
     LocalStorage.set(this.storageName, this.currentCulture.value?.cultureName ?? defaultLanguageKey);
   }
 }
+
+export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
+  tokenKey: LanguageService.name,
+  create: () => new LanguageService()
+};

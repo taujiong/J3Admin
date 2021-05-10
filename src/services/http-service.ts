@@ -1,11 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ServiceDescriptor } from 'src/utils';
 
-export const HttpServiceDescriptor: ServiceDescriptor<HttpService> = {
-  token: Symbol('http-service'),
-  create: () => new HttpService()
-};
-
 export class HttpService {
   private _axiosInstance!: AxiosInstance;
 
@@ -53,3 +48,8 @@ export class HttpService {
     return this._axiosInstance.interceptors.request.use(interception);
   }
 }
+
+export const HttpServiceDescriptor: ServiceDescriptor<HttpService> = {
+  tokenKey: HttpService.name,
+  create: () => new HttpService()
+};

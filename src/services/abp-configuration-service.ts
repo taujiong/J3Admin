@@ -3,11 +3,6 @@ import { HttpService } from 'src/services/http-service';
 import { ServiceDescriptor } from 'src/utils';
 import { computed, ref } from 'vue';
 
-export const AbpConfigurationServiceDescriptor: ServiceDescriptor<AbpConfigurationService> = {
-  token: Symbol('abp-application-service'),
-  create: () => new AbpConfigurationService()
-};
-
 export class AbpConfigurationService {
   private httpService!: HttpService;
   private readonly baseUrl = '/api/abp/application-configuration';
@@ -30,3 +25,8 @@ export class AbpConfigurationService {
     this._configuration.value = response.data;
   }
 }
+
+export const AbpConfigurationServiceDescriptor: ServiceDescriptor<AbpConfigurationService> = {
+  tokenKey: AbpConfigurationService.name,
+  create: () => new AbpConfigurationService()
+};

@@ -33,14 +33,14 @@ import {
   AuthService,
   AuthServiceDescriptor
 } from 'src/services';
-import { useInject } from 'src/utils';
+import { useInjector } from 'src/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'UserMenu',
   setup() {
-    const authService = useInject<AuthService>(AuthServiceDescriptor);
-    const abpConfigurationService = useInject<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const authService = useInjector<AuthService>(AuthServiceDescriptor);
+    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
     const currentUser = abpConfigurationService.currentUser.value;
     const login = () => authService.login();
     const logout = () => authService.logout();

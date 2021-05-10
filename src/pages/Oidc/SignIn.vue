@@ -9,16 +9,15 @@ import {
   AuthService,
   AuthServiceDescriptor
 } from 'src/services';
-import { useInject } from 'src/utils';
+import { useInjector } from 'src/utils';
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'SignIn',
   setup() {
-    const authService = useInject<AuthService>(AuthServiceDescriptor);
-    const abpConfigurationService = useInject<AbpConfigurationService>(AbpConfigurationServiceDescriptor
-    );
+    const authService = useInjector<AuthService>(AuthServiceDescriptor);
+    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
     const router = useRouter();
 
     onMounted(() => {

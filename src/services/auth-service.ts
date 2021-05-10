@@ -2,11 +2,6 @@ import { UserManager, UserManagerSettings } from 'oidc-client';
 import { ServiceDescriptor } from 'src/utils';
 import { readonly, ref } from 'vue';
 
-export const AuthServiceDescriptor: ServiceDescriptor<AuthService> = {
-  token: Symbol('auth-service'),
-  create: () => new AuthService()
-};
-
 export class AuthService {
   private _userManager!: UserManager;
   private _authorizationHeader = ref('');
@@ -45,3 +40,8 @@ export class AuthService {
     await this.refreshUser();
   }
 }
+
+export const AuthServiceDescriptor: ServiceDescriptor<AuthService> = {
+  tokenKey: AuthService.name,
+  create: () => new AuthService()
+};
