@@ -39,8 +39,8 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'UserMenu',
   setup() {
-    const authService = useInjector<AuthService>(AuthServiceDescriptor);
-    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const authService = useInjector<AuthService>(AuthServiceDescriptor, 'root');
+    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root');
     const currentUser = abpConfigurationService.currentUser.value;
     const login = () => authService.login();
     const logout = () => authService.logout();

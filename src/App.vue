@@ -23,18 +23,14 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 export default defineComponent({
   name: 'App',
   setup() {
-    const authService = useProvider<AuthService>(AuthServiceDescriptor, true, true);
-    authService.initialize(oidcSettings);
+    const authService = useProvider<AuthService>(AuthServiceDescriptor, 'root', oidcSettings);
 
-    const httpService = useProvider<HttpService>(HttpServiceDescriptor, true, true);
-    httpService.initialize(axiosConfig);
+    const httpService = useProvider<HttpService>(HttpServiceDescriptor, 'root', axiosConfig);
     httpService.useInterceptor(AuthRequestInterceptor, authService);
 
-    const abpConfigurationService = useProvider<AbpConfigurationService>(AbpConfigurationServiceDescriptor, true, true);
-    abpConfigurationService.initialize(httpService);
+    const abpConfigurationService = useProvider<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root', httpService);
 
-    const languageService = useProvider<LanguageService>(LanguageServiceTokenDescriptor, true, true);
-    languageService.initialize(abpConfigurationService.localization);
+    const languageService = useProvider<LanguageService>(LanguageServiceTokenDescriptor, 'root', abpConfigurationService.localization);
     httpService.useInterceptor(LanguageRequestInterceptor, languageService);
 
     watch(

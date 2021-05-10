@@ -5,10 +5,10 @@ import { ServiceDescriptor } from 'src/utils';
 import { readonly, ref } from 'vue';
 
 export class AuthService {
-  private _userManager!: UserManager;
+  private _userManager: UserManager;
   private _authorizationHeader = ref('');
 
-  initialize(oidcSettings: UserManagerSettings) {
+  constructor(oidcSettings: UserManagerSettings) {
     this._userManager = new UserManager(oidcSettings);
   }
 
@@ -45,7 +45,11 @@ export class AuthService {
 
 export const AuthServiceDescriptor: ServiceDescriptor<AuthService> = {
   tokenKey: AuthService.name,
-  create: () => new AuthService()
+  create: (...dependency: unknown[]) => {
+    if (dependency.length !== 1) throw new Error('dependency should be of type UserManagerSettings');
+    const oidcSettings = dependency[0] as UserManagerSettings;
+    return new AuthService(oidcSettings);
+  }
 };
 
 export const AuthRequestInterceptor: HttpRequestInterceptor = {

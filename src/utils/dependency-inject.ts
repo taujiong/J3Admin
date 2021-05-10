@@ -2,37 +2,34 @@ import { inject, provide } from 'vue';
 
 export interface ServiceDescriptor<T> {
   readonly tokenKey: string,
-  create: () => T,
+  create: (...dependency: unknown[]) => T,
   root?: T
 }
 
-export function useProvider<T>(descriptor: ServiceDescriptor<T>, asRoot = false, force?: boolean) {
-  const instance = descriptor.create();
+export function useProvider<T>(descriptor: ServiceDescriptor<T>, provideIn: 'component' | 'root', ...dependency: unknown[]) {
+  const instance = descriptor.create(...dependency);
   const token = Symbol.for(descriptor.tokenKey);
-  provide<T>(token, instance);
 
-  if (asRoot) {
-    if (descriptor.root && !force) throw new Error(`can not replace root for service ${ descriptor.tokenKey } when the root exists and "force" is not set true`);
-    descriptor.root = instance;
+  switch (provideIn) {
+    case 'component':
+      provide<T>(token, instance);
+      break;
+    case 'root':
+      if (descriptor.root) throw new Error('root has already existed');
+      descriptor.root = instance;
   }
 
   return instance;
 }
 
-export function useInjector<T>(descriptor: ServiceDescriptor<T>, searchInTree = true, withRoot = false, force = false) {
-  if (searchInTree) {
+export function useInjector<T>(descriptor: ServiceDescriptor<T>, provider: 'component' | 'root', fallbackToRoot?: boolean) {
+  if (provider === 'component') {
     const token = Symbol.for(descriptor.tokenKey);
     const instance = inject<T>(token);
     if (instance) return instance;
-    if (!withRoot) throw new Error(`service ${ descriptor.tokenKey } is not provided in upper component and root is excluded when "withRoot" is not set true`);
+    if (!fallbackToRoot) throw new Error('service is not provided in the upper component and can not fallback to root');
   }
 
-  if (withRoot) {
-    if (descriptor.root) return descriptor.root;
-    if (!force) throw new Error(`service ${ descriptor.tokenKey } is not provided and can not create instance when "force" is not set true`);
-    descriptor.root = descriptor.create();
-    return descriptor.root;
-  }
-
-  throw new Error('either "searchInTree" or "withRoot" should be set true');
+  if (!descriptor.root) throw new Error('root has not existed yet');
+  return descriptor.root;
 }

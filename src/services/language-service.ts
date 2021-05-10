@@ -11,7 +11,7 @@ export class LanguageService {
   private readonly storageName = 'current.language';
   private _localization = ref(<ApplicationLocalizationConfigurationDto>{});
 
-  initialize(localization: Ref<ApplicationLocalizationConfigurationDto>) {
+  constructor(localization: Ref<ApplicationLocalizationConfigurationDto>) {
     this._localization = localization;
     this._languageHeader.value = LocalStorage.getItem<string>(this.storageName)
       ?? defaultLanguageKey;
@@ -55,7 +55,11 @@ export class LanguageService {
 
 export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
   tokenKey: LanguageService.name,
-  create: () => new LanguageService()
+  create: (...dependency) => {
+    if (dependency.length !== 1) throw new Error('dependency should be of type Ref<ApplicationLocalizationConfigurationDto>');
+    const language = dependency[0] as Ref<ApplicationLocalizationConfigurationDto>;
+    return new LanguageService(language);
+  }
 };
 
 export const LanguageRequestInterceptor: HttpRequestInterceptor = {

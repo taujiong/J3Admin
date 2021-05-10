@@ -2,9 +2,9 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ServiceDescriptor } from 'src/utils';
 
 export class HttpService {
-  private _axiosInstance!: AxiosInstance;
+  private _axiosInstance: AxiosInstance;
 
-  initialize(axiosConfig: AxiosRequestConfig) {
+  constructor(axiosConfig: AxiosRequestConfig) {
     this._axiosInstance = axios.create(axiosConfig);
   }
 
@@ -84,5 +84,9 @@ export interface HttpResponseInterceptor extends HttpInterceptor<AxiosResponse> 
 
 export const HttpServiceDescriptor: ServiceDescriptor<HttpService> = {
   tokenKey: HttpService.name,
-  create: () => new HttpService()
+  create: (...dependency: unknown[]) => {
+    if (dependency.length !== 1) throw new Error('dependency should be of type AxiosRequestConfig');
+    const config = dependency[0] as AxiosRequestConfig;
+    return new HttpService(config);
+  }
 };

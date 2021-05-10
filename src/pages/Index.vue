@@ -12,7 +12,7 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'Index',
   setup() {
-    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor);
+    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root');
     const currentUser = abpConfigurationService.currentUser;
     const userName = ref(currentUser.value.isAuthenticated ? currentUser.value.userName : 'Anonymous');
 
