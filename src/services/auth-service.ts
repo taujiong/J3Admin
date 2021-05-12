@@ -1,7 +1,8 @@
 import { AxiosRequestConfig } from 'axios';
 import { UserManager, UserManagerSettings } from 'oidc-client';
+import { TypeProvider } from 'src/models';
+import { oidcSettings } from 'src/presets';
 import { HttpRequestInterceptor } from 'src/services/http-service';
-import { ServiceDescriptor } from 'src/utils';
 import { readonly, ref } from 'vue';
 
 export class AuthService {
@@ -43,14 +44,11 @@ export class AuthService {
   }
 }
 
-export const AuthServiceDescriptor: ServiceDescriptor<AuthService> = {
-  tokenKey: AuthService.name,
-  create: (...dependency: unknown[]) => {
-    if (dependency.length !== 1) throw new Error('dependency should be of type UserManagerSettings');
-    const oidcSettings = dependency[0] as UserManagerSettings;
-    return new AuthService(oidcSettings);
-  }
-};
+export const AuthServiceProvider = new TypeProvider<AuthService>(
+  Symbol.for(AuthService.name),
+  AuthService,
+  [oidcSettings]
+);
 
 export const AuthRequestInterceptor: HttpRequestInterceptor = {
   name: AuthService.name,

@@ -29,18 +29,18 @@
 <script lang="ts">
 import {
   AbpConfigurationService,
-  AbpConfigurationServiceDescriptor,
+  AbpConfigurationServiceProvider,
   AuthService,
-  AuthServiceDescriptor
+  AuthServiceProvider
 } from 'src/services';
-import { useInjector } from 'src/utils';
+import { injectFrom } from 'src/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'UserMenu',
   setup() {
-    const authService = useInjector<AuthService>(AuthServiceDescriptor, 'root');
-    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root');
+    const authService = injectFrom<AuthService>('component', AuthServiceProvider.token);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
     const currentUser = abpConfigurationService.currentUser.value;
     const login = () => authService.login();
     const logout = () => authService.logout();

@@ -2,9 +2,9 @@ import { AxiosRequestConfig } from 'axios';
 import { i18n } from 'boot/i18n';
 import { LocalStorage } from 'quasar';
 import { defaultLanguageKey } from 'src/i18n';
-import { ApplicationLocalizationConfigurationDto, LanguageInfo } from 'src/models';
+import { ApplicationLocalizationConfigurationDto, FactoryProvider, LanguageInfo } from 'src/models';
+import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
 import { HttpRequestInterceptor } from 'src/services/http-service';
-import { ServiceDescriptor } from 'src/utils';
 import { computed, readonly, Ref, ref } from 'vue';
 
 export class LanguageService {
@@ -53,14 +53,14 @@ export class LanguageService {
   }
 }
 
-export const LanguageServiceTokenDescriptor: ServiceDescriptor<LanguageService> = {
-  tokenKey: LanguageService.name,
-  create: (...dependency) => {
-    if (dependency.length !== 1) throw new Error('dependency should be of type Ref<ApplicationLocalizationConfigurationDto>');
-    const language = dependency[0] as Ref<ApplicationLocalizationConfigurationDto>;
-    return new LanguageService(language);
-  }
-};
+export const LanguageServiceProvider = new FactoryProvider<LanguageService>(
+  Symbol.for(LanguageService.name),
+  (...dependency) => {
+    const abpConfigurationService = dependency[0] as AbpConfigurationService;
+    return new LanguageService(abpConfigurationService.localization);
+  },
+  [AbpConfigurationServiceProvider]
+);
 
 export const LanguageRequestInterceptor: HttpRequestInterceptor = {
   name: LanguageService.name,

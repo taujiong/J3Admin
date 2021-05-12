@@ -1,6 +1,6 @@
 import { ApplicationConfigurationDto } from 'src/models';
-import { HttpService } from 'src/services/http-service';
-import { ServiceDescriptor } from 'src/utils';
+import { TypeProvider } from 'src/models/dependency-inject-provider';
+import { HttpService, HttpServiceProvider } from 'src/services/http-service';
 import { computed, ref } from 'vue';
 
 export class AbpConfigurationService {
@@ -26,11 +26,8 @@ export class AbpConfigurationService {
   }
 }
 
-export const AbpConfigurationServiceDescriptor: ServiceDescriptor<AbpConfigurationService> = {
-  tokenKey: AbpConfigurationService.name,
-  create: (...dependency) => {
-    if (dependency.length !== 1) throw new Error(`dependency should be of type ${ HttpService.name }`);
-    const httpService = dependency[0] as HttpService;
-    return new AbpConfigurationService(httpService);
-  }
-};
+export const AbpConfigurationServiceProvider = new TypeProvider<AbpConfigurationService>(
+  Symbol.for(AbpConfigurationService.name),
+  AbpConfigurationService,
+  [HttpServiceProvider]
+);

@@ -1,35 +1,36 @@
+import { ContainerType, DIProvider } from 'src/models/dependency-inject-provider';
 import { inject, provide } from 'vue';
 
-export interface ServiceDescriptor<T> {
-  readonly tokenKey: string,
-  create: (...dependency: unknown[]) => T,
-  root?: T
-}
+const ServiceRootInstanceCollection = new Map<symbol, unknown>();
 
-export function useProvider<T>(descriptor: ServiceDescriptor<T>, provideIn: 'component' | 'root', ...dependency: unknown[]) {
-  const instance = descriptor.create(...dependency);
-  const token = Symbol.for(descriptor.tokenKey);
+export function provideIn<T>(container: ContainerType, provider: DIProvider<T>) {
+  const instance = provider.createInstance(container);
 
-  switch (provideIn) {
+  switch (container) {
     case 'component':
-      provide<T>(token, instance);
+      provide<T>(provider.token, instance);
       break;
     case 'root':
-      if (descriptor.root) throw new Error('root has already existed');
-      descriptor.root = instance;
+      ServiceRootInstanceCollection.set(provider.token, instance);
+      break;
+    default:
+      throw new Error('invalid container type');
   }
 
   return instance;
 }
 
-export function useInjector<T>(descriptor: ServiceDescriptor<T>, provider: 'component' | 'root', fallbackToRoot?: boolean) {
-  if (provider === 'component') {
-    const token = Symbol.for(descriptor.tokenKey);
-    const instance = inject<T>(token);
-    if (instance) return instance;
-    if (!fallbackToRoot) throw new Error('service is not provided in the upper component and can not fallback to root');
+export function injectFrom<T>(container: ContainerType, token: symbol) {
+  switch (container) {
+    case 'component':
+      const componentInstance = inject<T>(token);
+      if (componentInstance) return componentInstance;
+      throw new Error('service has not provided in the upper component yet');
+    case 'root':
+      const rootInstance = ServiceRootInstanceCollection.get(token) as T;
+      if (rootInstance) return rootInstance;
+      throw new Error('service has not provided in the root yet');
+    default:
+      throw new Error('invalid container type');
   }
-
-  if (!descriptor.root) throw new Error('root has not existed yet');
-  return descriptor.root;
 }

@@ -5,19 +5,19 @@
 <script lang="ts">
 import {
   AbpConfigurationService,
-  AbpConfigurationServiceDescriptor,
+  AbpConfigurationServiceProvider,
   AuthService,
-  AuthServiceDescriptor
+  AuthServiceProvider
 } from 'src/services';
-import { useInjector } from 'src/utils';
+import { injectFrom } from 'src/utils';
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'SignOut',
   setup() {
-    const authService = useInjector<AuthService>(AuthServiceDescriptor, 'root');
-    const abpConfigurationService = useInjector<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root');
+    const authService = injectFrom<AuthService>('component', AuthServiceProvider.token);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
     const router = useRouter();
 
     onMounted(() => {

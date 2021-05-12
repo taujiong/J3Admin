@@ -4,33 +4,29 @@
 
 <script lang="ts">
 import { useQuasar } from 'quasar';
-import { axiosConfig, oidcSettings } from 'src/presets';
 import {
   AbpConfigurationService,
-  AbpConfigurationServiceDescriptor,
+  AbpConfigurationServiceProvider,
   AuthRequestInterceptor,
   AuthService,
-  AuthServiceDescriptor,
+  AuthServiceProvider,
   HttpService,
-  HttpServiceDescriptor,
+  HttpServiceProvider,
   LanguageRequestInterceptor,
   LanguageService,
-  LanguageServiceTokenDescriptor
+  LanguageServiceProvider
 } from 'src/services';
-import { useProvider } from 'src/utils';
+import { injectFrom, provideIn } from 'src/utils';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const authService = useProvider<AuthService>(AuthServiceDescriptor, 'root', oidcSettings);
-
-    const httpService = useProvider<HttpService>(HttpServiceDescriptor, 'root', axiosConfig);
+    const authService = provideIn<AuthService>('component', AuthServiceProvider);
+    const languageService = provideIn<LanguageService>('root', LanguageServiceProvider);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
+    const httpService = injectFrom<HttpService>('root', HttpServiceProvider.token);
     httpService.useInterceptor(AuthRequestInterceptor, authService);
-
-    const abpConfigurationService = useProvider<AbpConfigurationService>(AbpConfigurationServiceDescriptor, 'root', httpService);
-
-    const languageService = useProvider<LanguageService>(LanguageServiceTokenDescriptor, 'root', abpConfigurationService.localization);
     httpService.useInterceptor(LanguageRequestInterceptor, languageService);
 
     watch(
