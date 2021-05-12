@@ -53,10 +53,9 @@ export class LanguageService {
   }
 }
 
-export const LanguageServiceProvider = new FactoryProvider<LanguageService>(
+export const LanguageServiceProvider = new FactoryProvider<LanguageService, [AbpConfigurationService]>(
   Symbol.for(LanguageService.name),
-  (...dependency) => {
-    const abpConfigurationService = dependency[0] as AbpConfigurationService;
+  (abpConfigurationService) => {
     return new LanguageService(abpConfigurationService.localization);
   },
   [AbpConfigurationServiceProvider]

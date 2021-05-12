@@ -1,5 +1,5 @@
 import { injectFrom, provideIn } from 'src/utils';
-import { Type } from './common';
+import { Factory, Type } from './common';
 
 export type ContainerType = 'component' | 'root';
 
@@ -36,9 +36,9 @@ export class ValueProvider<T> extends DIProvider<T> {
 
 export class TypeProvider<T> extends DIProvider<T> {
   private readonly _type: Type<T>;
-  private readonly _dependency?: Array<unknown>;
+  private readonly _dependency?: unknown[];
 
-  constructor(token: symbol, type: Type<T>, dependency?: Array<unknown>) {
+  constructor(token: symbol, type: Type<T>, dependency?: unknown[]) {
     super(token);
     this._type = type;
     this._dependency = dependency;
@@ -50,11 +50,16 @@ export class TypeProvider<T> extends DIProvider<T> {
   }
 }
 
-export class FactoryProvider<T> extends DIProvider<T> {
-  private readonly _create: (...args: unknown[]) => T;
-  private readonly _dependency?: Array<unknown>;
+/**
+ * T => type of the target instance
+ *
+ * P => type of the parameter(s) in function create
+ */
+export class FactoryProvider<T, P> extends DIProvider<T> {
+  private readonly _create: Factory<P, T>;
+  private readonly _dependency?: unknown[];
 
-  constructor(token: symbol, create: (...args: unknown[]) => T, dependency?: Array<unknown>) {
+  constructor(token: symbol, create: Factory<P, T>, dependency?: unknown[]) {
     super(token);
     this._create = create;
     this._dependency = dependency;
