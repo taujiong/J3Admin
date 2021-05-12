@@ -16,7 +16,7 @@ import { useRouter } from 'vue-router';
 export default defineComponent({
   name: 'SignOut',
   setup() {
-    const authService = injectFrom<AuthService>('component', AuthServiceProvider.token);
+    const authService = injectFrom<AuthService>('root', AuthServiceProvider.token);
     const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
     const router = useRouter();
 

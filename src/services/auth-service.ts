@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { UserManager, UserManagerSettings } from 'oidc-client';
-import { TypeProvider } from 'src/models';
+import { FactoryProvider, TypeProvider } from 'src/models';
 import { oidcSettings } from 'src/presets';
 import { HttpRequestInterceptor } from 'src/services/http-service';
 import { readonly, ref } from 'vue';
@@ -50,16 +50,17 @@ export const AuthServiceProvider = new TypeProvider<AuthService>(
   [oidcSettings]
 );
 
-export const AuthRequestInterceptor: HttpRequestInterceptor = {
-  name: AuthService.name,
-  target: 'request',
-  intercept: (...dependencies: unknown[]) => {
-    if (dependencies.length !== 1) throw new Error('AuthRequestInterceptor requires exactly 1 parameter with type "AuthService"');
-
-    const authService = dependencies[0] as AuthService;
-    return (config: AxiosRequestConfig) => {
-      config.headers['Authorization'] = authService.authorizationHeader.value;
-      return config;
+export const AuthRequestInterceptorProvider = new FactoryProvider<HttpRequestInterceptor, AuthService>(
+  Symbol.for('AuthRequestInterceptor'),
+  (authService) => {
+    return {
+      name: 'AuthRequestInterceptor',
+      target: 'request',
+      interception: (config: AxiosRequestConfig) => {
+        config.headers['Authorization'] = authService.authorizationHeader.value;
+        return config;
+      }
     };
-  }
-};
+  },
+  [AuthServiceProvider]
+);

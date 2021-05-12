@@ -53,7 +53,7 @@ export class LanguageService {
   }
 }
 
-export const LanguageServiceProvider = new FactoryProvider<LanguageService, [AbpConfigurationService]>(
+export const LanguageServiceProvider = new FactoryProvider<LanguageService, AbpConfigurationService>(
   Symbol.for(LanguageService.name),
   (abpConfigurationService) => {
     return new LanguageService(abpConfigurationService.localization);
@@ -61,16 +61,17 @@ export const LanguageServiceProvider = new FactoryProvider<LanguageService, [Abp
   [AbpConfigurationServiceProvider]
 );
 
-export const LanguageRequestInterceptor: HttpRequestInterceptor = {
-  name: LanguageService.name,
-  target: 'request',
-  intercept: (...dependencies) => {
-    if (dependencies.length !== 1) throw new Error('LanguageRequestInterceptor requires exactly 1 parameter with type "LanguageService"');
-
-    const languageService = dependencies[0] as LanguageService;
-    return (config: AxiosRequestConfig) => {
-      config.headers['Accept-Language'] = languageService.languageHeader.value;
-      return config;
+export const LanguageRequestInterceptorProvider = new FactoryProvider<HttpRequestInterceptor, LanguageService>(
+  Symbol.for('LanguageRequestInterceptor'),
+  (languageService) => {
+    return {
+      name: 'LanguageRequestInterceptor',
+      target: 'request',
+      interception: (config: AxiosRequestConfig) => {
+        config.headers['Accept-Language'] = languageService.languageHeader.value;
+        return config;
+      }
     };
-  }
-};
+  },
+  [LanguageServiceProvider]
+);

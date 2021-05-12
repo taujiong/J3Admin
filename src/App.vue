@@ -7,12 +7,13 @@ import { useQuasar } from 'quasar';
 import {
   AbpConfigurationService,
   AbpConfigurationServiceProvider,
-  AuthRequestInterceptor,
+  AuthRequestInterceptorProvider,
   AuthService,
   AuthServiceProvider,
+  HttpRequestInterceptor,
   HttpService,
   HttpServiceProvider,
-  LanguageRequestInterceptor,
+  LanguageRequestInterceptorProvider,
   LanguageService,
   LanguageServiceProvider
 } from 'src/services';
@@ -22,12 +23,17 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 export default defineComponent({
   name: 'App',
   setup() {
-    const authService = provideIn<AuthService>('component', AuthServiceProvider);
+    const authService = provideIn<AuthService>('root', AuthServiceProvider);
+    const authRequestInterceptor = provideIn<HttpRequestInterceptor>('root', AuthRequestInterceptorProvider);
+
     const languageService = provideIn<LanguageService>('root', LanguageServiceProvider);
+    const languageRequestInterceptor = provideIn<HttpRequestInterceptor>('root', LanguageRequestInterceptorProvider);
+
     const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
+
     const httpService = injectFrom<HttpService>('root', HttpServiceProvider.token);
-    httpService.useInterceptor(AuthRequestInterceptor, authService);
-    httpService.useInterceptor(LanguageRequestInterceptor, languageService);
+    httpService.useInterceptor(authRequestInterceptor);
+    httpService.useInterceptor(languageRequestInterceptor);
 
     watch(
       () => languageService.currentCulture.value,

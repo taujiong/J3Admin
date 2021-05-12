@@ -19,6 +19,15 @@ export abstract class DIProvider<T> {
       return provideIn<T>(container, this);
     }
   }
+
+  hasInstance(container: ContainerType) {
+    try {
+      injectFrom<T>(container, this.token);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 export class ValueProvider<T> extends DIProvider<T> {
