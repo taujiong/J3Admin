@@ -8,16 +8,25 @@ export function provideIn<T>(container: ContainerType, provider: DIProvider<T>) 
 
   switch (container) {
     case 'component':
-      provide<T>(provider.token, instance);
-      break;
+      try {
+        let preComponentInstance = injectFrom<T>(container, provider.token);
+        preComponentInstance = Object.assign(preComponentInstance, instance);
+        return preComponentInstance;
+      } catch (error) {
+        provide<T>(provider.token, instance);
+        return instance;
+      }
     case 'root':
-      ServiceRootInstanceCollection.set(provider.token, instance);
-      break;
+      let preRootInstance = ServiceRootInstanceCollection.get(provider.token) as T;
+      if (!preRootInstance) {
+        ServiceRootInstanceCollection.set(provider.token, instance);
+        return instance;
+      }
+      preRootInstance = Object.assign(preRootInstance, instance);
+      return preRootInstance;
     default:
       throw new Error('invalid container type');
   }
-
-  return instance;
 }
 
 export function injectFrom<T>(container: ContainerType, token: symbol) {
