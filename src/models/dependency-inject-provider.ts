@@ -14,9 +14,9 @@ export abstract class DIProvider<T> {
 
   resolveInstance(container: ContainerType) {
     try {
-      return injectFrom<T>(container, this.token);
+      return injectFrom<T>(this.token, container);
     } catch (error) {
-      return provideIn<T>(container, this);
+      return provideIn<T>(this, container);
     }
   }
 }

@@ -23,15 +23,15 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 export default defineComponent({
   name: 'App',
   setup() {
-    const authService = provideIn<AuthService>('root', AuthServiceProvider);
-    const authRequestInterceptor = provideIn<HttpRequestInterceptor>('root', AuthRequestInterceptorProvider);
+    const authService = provideIn<AuthService>(AuthServiceProvider);
+    const authRequestInterceptor = provideIn<HttpRequestInterceptor>(AuthRequestInterceptorProvider);
 
-    const languageService = provideIn<LanguageService>('root', LanguageServiceProvider);
-    const languageRequestInterceptor = provideIn<HttpRequestInterceptor>('root', LanguageRequestInterceptorProvider);
+    const languageService = provideIn<LanguageService>(LanguageServiceProvider);
+    const languageRequestInterceptor = provideIn<HttpRequestInterceptor>(LanguageRequestInterceptorProvider);
 
-    const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider.token);
 
-    const httpService = injectFrom<HttpService>('root', HttpServiceProvider.token);
+    const httpService = injectFrom<HttpService>(HttpServiceProvider.token);
     httpService.useInterceptor(authRequestInterceptor);
     httpService.useInterceptor(languageRequestInterceptor);
 

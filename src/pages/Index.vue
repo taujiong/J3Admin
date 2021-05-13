@@ -13,8 +13,8 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'Index',
   setup() {
-    const authService = injectFrom<AuthService>('root', AuthServiceProvider.token);
-    const userService = injectFrom<UserService>('root', UserServiceProvider.token);
+    const authService = injectFrom<AuthService>(AuthServiceProvider.token);
+    const userService = injectFrom<UserService>(UserServiceProvider.token);
 
     const userName = ref(authService.isAuthenticated.value
       ? userService.currentUser.value.userName

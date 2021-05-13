@@ -3,13 +3,13 @@ import { inject, provide } from 'vue';
 
 const ServiceRootInstanceCollection = new Map<symbol, unknown>();
 
-export function provideIn<T>(container: ContainerType, provider: DIProvider<T>) {
+export function provideIn<T>(provider: DIProvider<T>, container: ContainerType = 'root') {
   const instance = provider.createInstance(container);
 
   switch (container) {
     case 'component':
       try {
-        let preComponentInstance = injectFrom<T>(container, provider.token);
+        let preComponentInstance = injectFrom<T>(provider.token);
         preComponentInstance = Object.assign(preComponentInstance, instance);
         return preComponentInstance;
       } catch (error) {
@@ -29,7 +29,7 @@ export function provideIn<T>(container: ContainerType, provider: DIProvider<T>) 
   }
 }
 
-export function injectFrom<T>(container: ContainerType, token: symbol) {
+export function injectFrom<T>(token: symbol, container: ContainerType = 'root') {
   switch (container) {
     case 'component':
       const componentInstance = inject<T>(token);
