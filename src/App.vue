@@ -36,7 +36,7 @@ export default defineComponent({
     httpService.useInterceptor(languageRequestInterceptor);
 
     watch(
-      () => languageService.currentCulture.value,
+      () => abpConfigurationService.configuration.value,
       () => languageService.updateI18n()
     );
 

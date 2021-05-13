@@ -13,8 +13,8 @@ export default defineComponent({
   name: 'Index',
   setup() {
     const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
-    const currentUser = abpConfigurationService.currentUser;
-    const userName = ref(currentUser.value.isAuthenticated ? currentUser.value.userName : 'Anonymous');
+    const currentUser = abpConfigurationService.configuration.value.currentUser;
+    const userName = ref(currentUser.isAuthenticated ? currentUser.userName : 'Anonymous');
 
     return { currentUser, userName };
   }

@@ -2,17 +2,23 @@ import { AxiosRequestConfig } from 'axios';
 import { i18n } from 'boot/i18n';
 import { LocalStorage } from 'quasar';
 import { defaultLanguageKey } from 'src/i18n';
-import { ApplicationLocalizationConfigurationDto, FactoryProvider, LanguageInfo } from 'src/models';
+import {
+  ApplicationLocalizationConfigurationDto,
+  FactoryProvider,
+  LanguageInfo,
+  TypeProvider,
+  VueComputedReadonlyRef
+} from 'src/models';
 import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
 import { HttpRequestInterceptor } from 'src/services/http-service';
-import { computed, readonly, Ref, ref } from 'vue';
+import { computed, readonly, ref } from 'vue';
 
 export class LanguageService {
   private readonly storageName = 'current.language';
-  private _localization = ref(<ApplicationLocalizationConfigurationDto>{});
+  private _localization: VueComputedReadonlyRef<ApplicationLocalizationConfigurationDto>;
 
-  constructor(localization: Ref<ApplicationLocalizationConfigurationDto>) {
-    this._localization = localization;
+  constructor(abpConfigurationService: AbpConfigurationService) {
+    this._localization = computed(() => abpConfigurationService.configuration.value.localization);
     this._languageHeader.value = LocalStorage.getItem<string>(this.storageName)
       ?? defaultLanguageKey;
   }
@@ -24,25 +30,26 @@ export class LanguageService {
   }
 
   get currentCulture() {
-    return computed(() => this._localization.value?.currentCulture);
+    return computed(() => this._localization.value.currentCulture);
   }
 
   get languages() {
-    return computed(() => this._localization.value?.languages);
+    return computed(() => this._localization.value.languages);
   }
 
   get messages() {
-    return computed(() => this._localization.value?.values);
+    return computed(() => this._localization.value.values);
   }
 
   switchLanguage(language: LanguageInfo) {
     if (!language.cultureName) return;
-    if (language.cultureName === this.currentCulture.value.cultureName) return;
+    if (language.cultureName === this.currentCulture.value?.cultureName) return;
     this._languageHeader.value = language.cultureName;
   }
 
   updateI18n() {
-    const locale = this.currentCulture.value.cultureName ?? defaultLanguageKey;
+    if (!this.messages) return;
+    const locale = this.currentCulture.value?.cultureName ?? defaultLanguageKey;
     const i18nRoot = i18n.global;
     i18nRoot.mergeLocaleMessage(locale, this.messages.value);
     i18nRoot.locale = locale;
@@ -53,11 +60,9 @@ export class LanguageService {
   }
 }
 
-export const LanguageServiceProvider = new FactoryProvider<LanguageService, AbpConfigurationService>(
+export const LanguageServiceProvider = new TypeProvider<LanguageService>(
   Symbol.for(LanguageService.name),
-  (abpConfigurationService) => {
-    return new LanguageService(abpConfigurationService.localization);
-  },
+  LanguageService,
   [AbpConfigurationServiceProvider]
 );
 

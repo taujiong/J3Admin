@@ -3,7 +3,7 @@
     <q-menu>
       <q-list style="min-width: 100%;">
         <q-item
-          v-for="lang in allLanguages"
+          v-for="lang of allLanguages"
           :key="lang.displayName"
           v-close-popup
           v-ripple
@@ -35,7 +35,7 @@ export default defineComponent({
     const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
     const languageService = injectFrom<LanguageService>('root', LanguageServiceProvider.token);
 
-    const allLanguages = languageService.languages;
+    const allLanguages = languageService.languages.value;
     const currentLanguage = languageService.currentCulture;
     const switchLanguage = async (language: LanguageInfo) => {
       languageService.switchLanguage(language);

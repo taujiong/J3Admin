@@ -41,7 +41,7 @@ export default defineComponent({
   setup() {
     const authService = injectFrom<AuthService>('root', AuthServiceProvider.token);
     const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
-    const currentUser = abpConfigurationService.currentUser.value;
+    const currentUser = abpConfigurationService.configuration.value.currentUser;
     const login = () => authService.login();
     const logout = () => authService.logout();
 

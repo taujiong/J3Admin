@@ -1,7 +1,7 @@
 import { ApplicationConfigurationDto } from 'src/models';
 import { TypeProvider } from 'src/models/dependency-inject-provider';
 import { HttpService, HttpServiceProvider } from 'src/services/http-service';
-import { computed, ref } from 'vue';
+import { readonly, ref } from 'vue';
 
 export class AbpConfigurationService {
   private _httpService: HttpService;
@@ -12,12 +12,8 @@ export class AbpConfigurationService {
     this._httpService = httpService;
   }
 
-  get currentUser() {
-    return computed(() => this._configuration.value?.currentUser);
-  }
-
-  get localization() {
-    return computed(() => this._configuration.value?.localization);
+  get configuration() {
+    return readonly(this._configuration);
   }
 
   async loadConfiguration() {
