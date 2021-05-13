@@ -11,10 +11,11 @@ import {
 } from 'src/models';
 import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
 import { HttpRequestInterceptor } from 'src/services/http-service';
-import { computed, readonly, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export class LanguageService {
   private readonly storageName = 'current.language';
+  currentCulture = computed(() => this._localization.value.currentCulture);
   private _localization: VueComputedReadonlyRef<ApplicationLocalizationConfigurationDto>;
 
   constructor(abpConfigurationService: AbpConfigurationService) {
@@ -23,23 +24,10 @@ export class LanguageService {
       ?? defaultLanguageKey;
   }
 
+  languages = computed(() => this._localization.value.languages);
+  messages = computed(() => this._localization.value.values);
   private _languageHeader = ref('');
-
-  get languageHeader() {
-    return readonly(this._languageHeader);
-  }
-
-  get currentCulture() {
-    return computed(() => this._localization.value.currentCulture);
-  }
-
-  get languages() {
-    return computed(() => this._localization.value.languages);
-  }
-
-  get messages() {
-    return computed(() => this._localization.value.values);
-  }
+  languageHeader = computed(() => this._languageHeader.value);
 
   switchLanguage(language: LanguageInfo) {
     if (!language.cultureName) return;

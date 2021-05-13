@@ -1,21 +1,24 @@
 import { AxiosRequestConfig } from 'axios';
-import { UserManager, UserManagerSettings } from 'oidc-client';
+import { User, UserManager, UserManagerSettings } from 'oidc-client';
 import { FactoryProvider, TypeProvider } from 'src/models';
 import { oidcSettings } from 'src/presets';
 import { HttpRequestInterceptor } from 'src/services/http-service';
-import { readonly, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export class AuthService {
   private _userManager: UserManager;
-  private _authorizationHeader = ref('');
+  private _oidcUser = ref<User>();
 
   constructor(oidcSettings: UserManagerSettings) {
     this._userManager = new UserManager(oidcSettings);
   }
 
-  get authorizationHeader() {
-    return readonly(this._authorizationHeader);
-  }
+  isAuthenticated = computed(() => this._oidcUser.value != undefined);
+
+  authorizationHeader = computed(() => {
+    const user = this._oidcUser.value;
+    return user ? `${ user.token_type } ${ user?.access_token }` : '';
+  });
 
   async login() {
     await this._userManager.clearStaleState();
@@ -29,9 +32,7 @@ export class AuthService {
 
   async refreshUser() {
     const user = await this._userManager.getUser();
-    this._authorizationHeader.value = user
-      ? `${ user.token_type } ${ user.access_token }`
-      : '';
+    this._oidcUser.value = user ?? undefined;
   }
 
   async logout() {
@@ -57,7 +58,8 @@ export const AuthRequestInterceptorProvider = new FactoryProvider<HttpRequestInt
       name: 'AuthRequestInterceptor',
       target: 'request',
       interception: (config: AxiosRequestConfig) => {
-        config.headers['Authorization'] = authService.authorizationHeader.value;
+        if (authService.isAuthenticated)
+          config.headers['Authorization'] = authService.authorizationHeader.value;
         return config;
       }
     };

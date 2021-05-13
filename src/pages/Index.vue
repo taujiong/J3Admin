@@ -5,18 +5,22 @@
 </template>
 
 <script lang="ts">
-import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services';
+import { AuthService, AuthServiceProvider } from 'src/services';
+import { UserService, UserServiceProvider } from 'src/services/user-service';
 import { injectFrom } from 'src/utils';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'Index',
   setup() {
-    const abpConfigurationService = injectFrom<AbpConfigurationService>('root', AbpConfigurationServiceProvider.token);
-    const currentUser = abpConfigurationService.configuration.value.currentUser;
-    const userName = ref(currentUser.isAuthenticated ? currentUser.userName : 'Anonymous');
+    const authService = injectFrom<AuthService>('root', AuthServiceProvider.token);
+    const userService = injectFrom<UserService>('root', UserServiceProvider.token);
 
-    return { currentUser, userName };
+    const userName = ref(authService.isAuthenticated.value
+      ? userService.currentUser.value.userName
+      : 'Anonymous');
+
+    return { userName };
   }
 });
 </script>
