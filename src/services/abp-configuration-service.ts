@@ -17,8 +17,7 @@ export class AbpConfigurationService {
   }
 
   async loadConfiguration() {
-    const response = await this._httpService.get<ApplicationConfigurationDto>(this.baseUrl);
-    this._configuration.value = response.data;
+    this._configuration.value = await this._httpService.get<ApplicationConfigurationDto>(this.baseUrl);
   }
 }
 

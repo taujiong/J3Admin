@@ -9,40 +9,48 @@ export class HttpService {
     this._axiosInstance = axios.create(axiosConfig);
   }
 
-  delete<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.delete(url, config);
+  async delete<T>(url: string, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.delete<T>(url, config);
+    return response.data;
   }
 
-  get<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.get(url, config);
+  async get<T>(url: string, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.get<T>(url, config);
+    return response.data;
   }
 
   getUri(config?: AxiosRequestConfig): string {
     return this._axiosInstance.getUri(config);
   }
 
-  head<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.head(url, config);
+  async head<T>(url: string, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.head<T>(url, config);
+    return response.data;
   }
 
-  options<T = unknown, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.options(url, config);
+  async options<T>(url: string, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.options<T>(url, config);
+    return response.data;
   }
 
-  patch<T = unknown, R = AxiosResponse<T>>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.patch(url, data, config);
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.patch<T>(url, data, config);
+    return response.data;
   }
 
-  post<T = unknown, R = AxiosResponse<T>>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.delete(url, config);
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.post<T>(url, config);
+    return response.data;
   }
 
-  put<T = unknown, R = AxiosResponse<T>>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.put(url, data, config);
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+    const response = await this._axiosInstance.put<T>(url, data, config);
+    return response.data;
   }
 
-  request<T = unknown, R = AxiosResponse<T>>(config: AxiosRequestConfig): Promise<R> {
-    return this._axiosInstance.request(config);
+  async request<T>(config: AxiosRequestConfig) {
+    const response = await this._axiosInstance.request<T>(config);
+    return response.data;
   }
 
   useInterceptor(interceptor: HttpRequestInterceptor | HttpResponseInterceptor) {
