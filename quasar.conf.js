@@ -55,16 +55,14 @@ module.exports = configure(function(ctx) {
     build: {
       vueRouterMode: 'history',
 
-      env: {
-        AUTHORITY_URL: ctx.dev
-          ? 'https://j3space.dev'
-          : 'https://trilliontang.work',
-        APP_BASE_URL: ctx.dev
-          ? 'https://www.j3space.dev'
-          : 'https://www.trilliontang.work',
-        API_BASE_URL: ctx.dev
-          ? 'https://api.j3space.dev'
-          : 'https://api.trilliontang.work'
+      env: ctx.dev ? {
+        AUTHORITY_URL: 'https://j3space.dev',
+        APP_BASE_URL: 'https://www.j3space.dev',
+        API_BASE_URL: 'https://api.j3space.dev'
+      } : {
+        AUTHORITY_URL: 'https://trilliontang.work',
+        APP_BASE_URL: 'https://www.trilliontang.work',
+        API_BASE_URL: 'https://api.trilliontang.work'
       },
 
       // https://v2.quasar.dev/quasar-cli/handling-webpack

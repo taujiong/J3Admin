@@ -9,8 +9,7 @@ import {
   TypeProvider,
   VueComputedReadonlyRef
 } from 'src/models';
-import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
-import { HttpRequestInterceptor } from 'src/services/http-service';
+import { AbpConfigurationService, AbpConfigurationServiceProvider, HttpRequestInterceptor } from 'src/services';
 import { computed, ref } from 'vue';
 
 export class LanguageService {

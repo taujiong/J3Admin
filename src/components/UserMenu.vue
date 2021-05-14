@@ -27,8 +27,7 @@
 </template>
 
 <script lang="ts">
-import { AuthService, AuthServiceProvider } from 'src/services';
-import { UserService, UserServiceProvider } from 'src/services/user-service';
+import { AuthService, AuthServiceProvider, UserService, UserServiceProvider } from 'src/services';
 import { injectFrom, provideIn } from 'src/utils';
 import { defineComponent } from 'vue';
 

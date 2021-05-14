@@ -1,4 +1,4 @@
-import { ExtensibleFullAuditedEntityDto, ExtensibleObject } from './dtos';
+import { ExtensibleFullAuditedEntityDto, ExtensibleObject } from 'src/models';
 
 export interface IdentityUserCreateDto extends IdentityUserCreateOrUpdateDtoBase {
   password: string;

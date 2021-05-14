@@ -1,19 +1,26 @@
 import {
+  IdentityRoleCreateDto,
+  IdentityRoleDto,
+  IdentityRoleUpdateDto,
   ListResultDto,
   PagedAndSortedResultRequestDto,
   PagedResultDto,
   TypeProvider,
   VueComputedReadonlyRef
 } from 'src/models';
-import { IdentityRoleCreateDto, IdentityRoleDto, IdentityRoleUpdateDto } from 'src/models/identity-role';
-import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
-import { HttpService, HttpServiceProvider } from 'src/services/http-service';
+import { eApiUrl } from 'src/presets';
+import {
+  AbpConfigurationService,
+  AbpConfigurationServiceProvider,
+  HttpService,
+  HttpServiceProvider
+} from 'src/services';
 import { computed } from 'vue';
 
 export class RoleService {
   currentRoles: VueComputedReadonlyRef<Array<string>>;
   private _httpService: HttpService;
-  private readonly baseUrl = '/api/identity/roles';
+  private readonly baseUrl = eApiUrl.IdentityRole;
 
   constructor(httpService: HttpService, abpConfigurationService: AbpConfigurationService) {
     this._httpService = httpService;

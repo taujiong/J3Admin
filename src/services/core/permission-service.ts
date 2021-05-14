@@ -5,15 +5,20 @@ import {
   UpdatePermissionsDto,
   VueComputedReadonlyRef
 } from 'src/models';
-import { AbpConfigurationService, AbpConfigurationServiceProvider } from 'src/services/abp-configuration-service';
-import { HttpService, HttpServiceProvider } from 'src/services/http-service';
+import { eApiUrl } from 'src/presets';
+import {
+  AbpConfigurationService,
+  AbpConfigurationServiceProvider,
+  HttpService,
+  HttpServiceProvider
+} from 'src/services';
 import { computed } from 'vue';
 
 export class PermissionService {
   grantedPolicies: VueComputedReadonlyRef<Record<string, boolean>>;
   allPolicies: VueComputedReadonlyRef<Record<string, boolean>>;
   private _httpService: HttpService;
-  private baseUrl = '/api/permission-management/permissions';
+  private baseUrl = eApiUrl.Permission;
 
   constructor(httpService: HttpService, abpConfigurationService: AbpConfigurationService) {
     this._httpService = httpService;

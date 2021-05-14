@@ -1,4 +1,4 @@
-import { ExtensibleEntityDto, ExtensibleObject } from './dtos';
+import { ExtensibleEntityDto, ExtensibleObject } from 'src/models';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IdentityRoleCreateDto extends IdentityRoleCreateOrUpdateDtoBase {

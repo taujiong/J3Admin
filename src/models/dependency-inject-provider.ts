@@ -1,5 +1,5 @@
+import { Factory, Type } from 'src/models';
 import { injectFrom, provideIn } from 'src/utils';
-import { Factory, Type } from './common';
 
 export type ContainerType = 'component' | 'root';
 

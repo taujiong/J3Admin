@@ -1,6 +1,11 @@
-import { CurrentCultureDto, LanguageInfo, TimingDto } from './culture';
-import { CurrentTenantDto, MultiTenancyInfoDto } from './multi-tenancy';
-import { ObjectExtensionsDto } from './object-extension';
+import {
+  CurrentCultureDto,
+  CurrentTenantDto,
+  LanguageInfo,
+  MultiTenancyInfoDto,
+  ObjectExtensionsDto,
+  TimingDto
+} from 'src/models';
 
 export interface ApplicationAuthConfigurationDto {
   policies: Record<string, boolean>;

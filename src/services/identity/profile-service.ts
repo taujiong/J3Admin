@@ -1,9 +1,10 @@
 import { ChangePasswordInput, ProfileDto, TypeProvider, UpdateProfileDto } from 'src/models';
-import { HttpService, HttpServiceProvider } from 'src/services/http-service';
+import { eApiUrl } from 'src/presets';
+import { HttpService, HttpServiceProvider } from 'src/services';
 
 export class ProfileService {
   private _httpService: HttpService;
-  private readonly baseUrl = '/api/identity/my-profile';
+  private readonly baseUrl = eApiUrl.Profile;
 
   constructor(httpService: HttpService) {
     this._httpService = httpService;

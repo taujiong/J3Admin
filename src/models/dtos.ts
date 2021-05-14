@@ -1,4 +1,4 @@
-import { Dictionary } from './common';
+import { Dictionary } from 'src/models';
 
 export interface ExtensibleObject {
   extraProperties: Dictionary<unknown>

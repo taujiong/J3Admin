@@ -1,4 +1,4 @@
-import { ContainerType, DIProvider } from 'src/models/dependency-inject-provider';
+import { ContainerType, DIProvider } from 'src/models';
 import { inject, provide } from 'vue';
 
 const ServiceRootInstanceCollection = new Map<symbol, unknown>();

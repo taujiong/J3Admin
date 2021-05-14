@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { User, UserManager, UserManagerSettings } from 'oidc-client';
 import { FactoryProvider, TypeProvider } from 'src/models';
 import { oidcSettings } from 'src/presets';
-import { HttpRequestInterceptor } from 'src/services/http-service';
+import { HttpRequestInterceptor } from 'src/services';
 import { computed, ref } from 'vue';
 
 export class AuthService {

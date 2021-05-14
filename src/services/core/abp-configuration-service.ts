@@ -1,11 +1,11 @@
-import { ApplicationConfigurationDto } from 'src/models';
-import { TypeProvider } from 'src/models/dependency-inject-provider';
-import { HttpService, HttpServiceProvider } from 'src/services/http-service';
+import { ApplicationConfigurationDto, TypeProvider } from 'src/models';
+import { eApiUrl } from 'src/presets';
+import { HttpService, HttpServiceProvider } from 'src/services';
 import { readonly, ref } from 'vue';
 
 export class AbpConfigurationService {
   private _httpService: HttpService;
-  private readonly baseUrl = '/api/abp/application-configuration';
+  private readonly baseUrl = eApiUrl.Configuration;
   private _configuration = ref(<ApplicationConfigurationDto>{});
 
   constructor(httpService: HttpService) {
