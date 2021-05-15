@@ -36,7 +36,7 @@ export class PermissionService {
     return await this._httpService.put<GetPermissionListResultDto>(this.baseUrl, payload, config);
   }
 
-  isPolicyGranted(policy: string) {
+  isPolicyGranted(policy?: string) {
     if (!policy) return true;
 
     const orRegexp = /\|\|/g;

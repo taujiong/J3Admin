@@ -6,6 +6,7 @@ export * from './dtos';
 export * from './identity-user';
 export * from './identity-role';
 export * from './multi-tenancy';
+export * from './navbar-item';
 export * from './object-extension';
 export * from './permission';
 export * from './user-profile';

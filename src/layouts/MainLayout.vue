@@ -40,14 +40,7 @@
       class="bg-grey-1"
       show-if-above
     >
-      <q-list>
-        <q-item-label
-          class="text-grey-8"
-          header
-        >
-          Essential Links
-        </q-item-label>
-      </q-list>
+      <Navbar />
     </q-drawer>
 
     <q-page-container>
@@ -58,12 +51,13 @@
 
 <script lang="ts">
 import LanguageSwitcher from 'components/LanguageSwitcher.vue';
+import Navbar from 'components/Navbar.vue';
 import UserMenu from 'components/UserMenu.vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',
-  components: { LanguageSwitcher, UserMenu },
+  components: { Navbar, LanguageSwitcher, UserMenu },
   setup() {
     const leftDrawerOpen = ref(false);
     const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
