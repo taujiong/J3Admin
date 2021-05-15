@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
-const errorRoutes: RouteRecordRaw[] = [
+export const errorRoutes: RouteRecordRaw[] = [
   {
     name: 'error',
     path: '/error/:code',
@@ -13,4 +13,9 @@ const errorRoutes: RouteRecordRaw[] = [
   }
 ];
 
-export default errorRoutes;
+export const errorMessages: Record<string, string> = {
+  '401': 'Sorry, but you are not authenticated...',
+  '403': 'Sorry, but you are not authorized...',
+  '404': 'Oops. Nothing here...',
+  '500': 'Oops. Something went wrong with the server...'
+};

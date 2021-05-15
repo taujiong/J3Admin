@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
-const oidcRoutes: RouteRecordRaw = {
+export const oidcRoutes: RouteRecordRaw = {
   path: '/oidc',
-  component: () => import('layouts/EmptyLayout.vue'),
+  component: () => import('layouts/SinglePageLayout.vue'),
   children: [
     {
       name: 'signin',
@@ -15,13 +15,4 @@ const oidcRoutes: RouteRecordRaw = {
       component: () => import('pages/Oidc/SignOut.vue')
     }
   ]
-};
-
-export default oidcRoutes;
-
-export const errorMessages: Record<string, string> = {
-  '401': 'Sorry, but you are not authenticated...',
-  '403': 'Sorry, but you are not authorized...',
-  '404': 'Oops. Nothing here...',
-  '500': 'Oops. Something went wrong with the server...'
 };

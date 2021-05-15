@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { errorMessages } from 'src/router/modules/oidc-routes';
+import { errorMessages } from 'src/router/modules/error-routes';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

@@ -9,7 +9,7 @@
     <q-menu>
       <q-list style="min-width: 100px;">
         <template v-if="currentUser.isAuthenticated">
-          <q-item v-ripple clickable>
+          <q-item v-ripple :to='{name: "user-profile"}' clickable>
             <q-item-section v-t="'AbpUi.PersonalInfo'"></q-item-section>
           </q-item>
           <q-item v-ripple clickable @click="logout">

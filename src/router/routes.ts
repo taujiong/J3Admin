@@ -1,4 +1,4 @@
-import { constantRoutes } from 'src/router/modules';
+import { constantRoutes, fallbackRoutes } from 'src/router/modules';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -7,7 +7,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ name: 'home', path: '', component: () => import('pages/Index.vue') }]
   },
-  ...constantRoutes
+  ...constantRoutes,
+  ...fallbackRoutes
 ];
 
 export default routes;
