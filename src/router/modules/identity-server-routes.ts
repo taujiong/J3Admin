@@ -50,7 +50,14 @@ export const identityServerRoutes: RouteRecordRaw = {
     {
       name: 'ids-api-scope',
       path: 'api-scope',
-      component: () => import('pages/IdentityServer/ApiScopeManagement.vue')
+      component: () => import('pages/IdentityServer/ApiScopeManagement.vue'),
+      meta: {
+        requiredPolicy: 'IdentityServer.ApiScope',
+        showInNavbar: true,
+        iconName: 'fact_check',
+        parentName: 'identity-server',
+        displayNameKey: 'AbpIdentityServer.Permission:IdentityResourceManagement'
+      }
     }
   ]
 };

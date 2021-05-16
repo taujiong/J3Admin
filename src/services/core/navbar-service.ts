@@ -7,13 +7,6 @@ import { useRouter } from 'vue-router';
 export class NavbarService {
   private _permissionService: PermissionService;
   private _flatItems = ref<Array<NavbarItem>>([]);
-  Items = computed(() => {
-    const availableItems = this._flatItems.value.filter(
-      item => !this.shouldHide(item)
-    );
-    const tree = this.createTree(availableItems);
-    return tree.filter(item => item.children.length > 0 || item.data.path);
-  });
 
   constructor(permissionService: PermissionService) {
     this._permissionService = permissionService;
@@ -22,6 +15,14 @@ export class NavbarService {
       .filter(route => route.meta.showInNavbar)
       .map(routeToNavbarItem);
   }
+
+  Items = computed(() => {
+    const availableItems = this._flatItems.value.filter(
+      item => !this.shouldHide(item)
+    );
+    const tree = this.createTree(availableItems);
+    return tree.filter(item => item.children.length > 0 || item.data.path);
+  });
 
   private shouldHide(item: NavbarItem) {
     return !this._permissionService.isPolicyGranted(item.requiredPolicy);

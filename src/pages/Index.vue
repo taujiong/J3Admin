@@ -32,28 +32,31 @@ export default defineComponent({
     const navbarService = injectFrom<NavbarService>(NavbarServiceProvider.token);
 
     const add = () => {
-      navbarService.addItem([{
-        key: 'test',
-        iconName: 'dashboard',
-        displayNameKey: 'AbpUi.Welcome'
-      }, {
-        key: 'test1',
-        iconName: 'dashboard',
-        parentKey: 'test',
-        displayNameKey: 'AbpUi.Login',
-        path: { name: 'home' }
-      },
+      navbarService.addItem([
+        {
+          key: 'test',
+          iconName: 'dashboard',
+          displayNameKey: 'AbpUi.Welcome'
+        },
+        {
+          key: 'test1',
+          iconName: 'dashboard',
+          parentKey: 'test',
+          displayNameKey: 'AbpUi.Login',
+          path: { name: 'user-management' }
+        },
         {
           key: 'test2',
           iconName: 'dashboard',
           parentKey: 'test',
           displayNameKey: 'AbpUi.Logout',
-          path: 'https://j3space.dev'
+          path: { name: 'role-management' }
         }]);
     };
 
     const remove = () => {
       navbarService.removeItem(['test1']);
+      navbarService.removeItem(['route:user-management']);
     };
 
     const patch = () => {

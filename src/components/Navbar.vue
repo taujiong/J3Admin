@@ -2,11 +2,10 @@
   <q-list>
     <template v-for="item of availableItems">
       <q-expansion-item v-if="item.children.length > 0"
-                        :key="item.data.key"
+                        :key="item.data.key + item.children.length"
                         :content-inset-level="(item.depth + 1) * 0.5"
                         :icon="item.data.iconName"
                         :label="$t(item.data.displayNameKey)"
-                        group="navbar"
       >
         <Navbar :items="item.children"></Navbar>
       </q-expansion-item>
