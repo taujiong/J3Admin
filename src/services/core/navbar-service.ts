@@ -35,6 +35,47 @@ export class NavbarService {
       item => toTreeNode<NavbarItem>(item)
     );
   }
+
+  addItem(items: Array<NavbarItem>) {
+    const map = new Map<string, NavbarItem>();
+    items.forEach(item => map.set(item.key, item));
+
+    const flatItems = this.filterWith(map);
+    map.forEach(item => flatItems.push(item));
+
+    this._flatItems.value = flatItems;
+  }
+
+  removeItem(keys: Array<string>) {
+    const set = new Set<string>(keys);
+    const setToRemove = this.findItemsToRemove(set);
+    this._flatItems.value = this.filterWith(setToRemove);
+  }
+
+  patchItem(key: string, props: Partial<NavbarItem>) {
+    const flatItems = this._flatItems.value;
+    const index = this._flatItems.value.findIndex(item => item.key === key);
+    if (index < 0) return false;
+
+    flatItems[index] = { ...flatItems[index], ...props };
+    this._flatItems.value = flatItems;
+  }
+
+  private filterWith(setOrMap: Set<string> | Map<string, NavbarItem>) {
+    return this._flatItems.value.filter(item => !setOrMap.has(item.key));
+  }
+
+  private findItemsToRemove(set: Set<string>): Set<string> {
+    return this._flatItems.value.reduce((acc, item) => {
+      if (item.parentKey && acc.has(item.parentKey)) {
+        const childSet = new Set([item.key]);
+        const children = this.findItemsToRemove(childSet);
+        return new Set([...acc, ...children]);
+      } else {
+        return acc;
+      }
+    }, set);
+  }
 }
 
 export const NavbarServiceProvider = new TypeProvider(
