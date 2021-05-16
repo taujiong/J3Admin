@@ -1,3 +1,4 @@
+import { blogRoutes } from 'src/router/modules/blog-routes';
 import { RouteRecordRaw } from 'vue-router';
 import { errorRoutes } from './error-routes';
 import { identityRoutes } from './identity-routes';
@@ -9,7 +10,8 @@ export const constantRoutes: RouteRecordRaw[] = [
   identityRoutes,
   identityServerRoutes,
   oidcRoutes,
-  permissionRoutes
+  permissionRoutes,
+  blogRoutes
 ];
 
 export const fallbackRoutes = errorRoutes;

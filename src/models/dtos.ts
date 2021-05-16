@@ -1,28 +1,42 @@
 import { Dictionary } from 'src/models';
 
-export interface ExtensibleObject {
-  extraProperties: Dictionary<unknown>
-}
-
-export interface ExtensibleEntityDto<TKey = string> extends ExtensibleObject {
+export interface EntityDto<TKey = string> {
   id: TKey;
 }
 
-export interface ExtensibleCreationAuditedEntityDto<TPrimaryKey = string> extends ExtensibleEntityDto<TPrimaryKey> {
+export interface CreationAuditedEntityDto<TPrimaryKey = string> extends EntityDto<TPrimaryKey> {
   creationTime: Date | string;
   creatorId?: string;
 }
 
-export interface ExtensibleAuditedEntityDto<TPrimaryKey = string> extends ExtensibleCreationAuditedEntityDto<TPrimaryKey> {
+export interface AuditedEntityDto<TPrimaryKey = string> extends CreationAuditedEntityDto<TPrimaryKey> {
   lastModificationTime?: Date | string;
   lastModifierId?: string;
 }
 
-export interface ExtensibleFullAuditedEntityDto<TPrimaryKey = string> extends ExtensibleAuditedEntityDto<TPrimaryKey> {
+export interface FullAuditedEntityDto<TPrimaryKey = string> extends AuditedEntityDto<TPrimaryKey> {
   isDeleted: boolean;
   deleterId?: string;
   deletionTime: Date | string;
 }
+
+export interface ExtensibleObject {
+  extraProperties: Dictionary<unknown>
+}
+
+export type ExtensibleEntityDto<TKey = string> = ExtensibleObject & EntityDto<TKey>;
+
+export type ExtensibleCreationAuditedEntityDto<TPrimaryKey = string> =
+  ExtensibleObject
+  & CreationAuditedEntityDto<TPrimaryKey>;
+
+export type ExtensibleAuditedEntityDto<TPrimaryKey = string> =
+  ExtensibleObject
+  & AuditedEntityDto<TPrimaryKey>;
+
+export type ExtensibleFullAuditedEntityDto<TPrimaryKey = string> =
+  ExtensibleObject
+  & FullAuditedEntityDto<TPrimaryKey>;
 
 export interface ListResultDto<T> {
   items?: T[];

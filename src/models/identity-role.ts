@@ -1,8 +1,6 @@
 import { ExtensibleEntityDto, ExtensibleObject } from 'src/models';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IdentityRoleCreateDto extends IdentityRoleCreateOrUpdateDtoBase {
-}
+export type IdentityRoleCreateDto = IdentityRoleCreateOrUpdateDtoBase
 
 export interface IdentityRoleCreateOrUpdateDtoBase extends ExtensibleObject {
   name: string;
@@ -10,7 +8,7 @@ export interface IdentityRoleCreateOrUpdateDtoBase extends ExtensibleObject {
   isPublic: boolean;
 }
 
-export interface IdentityRoleDto extends ExtensibleEntityDto<string> {
+export interface IdentityRoleDto extends ExtensibleEntityDto {
   name: string;
   isDefault: boolean;
   isStatic: boolean;

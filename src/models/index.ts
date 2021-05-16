@@ -1,4 +1,5 @@
 export * from './application-configuration';
+export * from './blog-post';
 export * from './common';
 export * from './culture';
 export * from './dependency-inject-provider';
