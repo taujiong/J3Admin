@@ -7,12 +7,11 @@
 </template>
 
 <script lang="ts">
-import { defaultPreviewOptions } from 'src/presets/vditor';
+import { defaultPreviewOptions } from 'src/presets';
 import { PostService, PostServiceProvider } from 'src/services';
-import { provideIn } from 'src/utils';
+import { injectFrom } from 'src/utils';
 import Vditor from 'vditor';
 import { defineComponent, onMounted } from 'vue';
-
 
 export default defineComponent({
   name: 'PostPreview',
@@ -23,7 +22,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const postService = provideIn<PostService>(PostServiceProvider);
+    const postService = injectFrom<PostService>(PostServiceProvider, true);
 
     onMounted(async () => {
       const post = await postService.getPostById(props.postId);

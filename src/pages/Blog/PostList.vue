@@ -5,6 +5,12 @@
         <q-item-section>
           <q-item-label class="text-h5">{{ $tc('Blogging.Post:Count', posts.length) }}</q-item-label>
         </q-item-section>
+        <q-item-section side>
+          <q-btn :to="{name: 'post-create'}"
+                 color="primary"
+                 icon="add"
+                 round />
+        </q-item-section>
       </q-item>
 
       <q-separator spaced="md" />
@@ -19,10 +25,14 @@
 
           <q-item-section side>
             <div class="q-gutter-xs">
-              <q-btn :to="{name: 'post-detail', params: {postId: post.id}}" class="gt-xs" dense flat
+              <q-btn :to="{name: 'post-detail', params: {postId: post.id}}"
+                     class="gt-xs" dense flat
                      icon="remove_red_eye" round
                      size="16px" />
-              <q-btn class="gt-xs" dense flat icon="mode_edit" round size="16px"></q-btn>
+              <q-btn :to="{name: 'post-edit', params: {postId: post.id}}"
+                     class="gt-xs" dense flat
+                     icon="mode_edit" round
+                     size="16px"></q-btn>
               <q-btn class="gt-xs" dense flat icon="delete" round size="16px"></q-btn>
             </div>
           </q-item-section>
@@ -37,13 +47,13 @@
 <script lang="ts">
 import { BlogPostDto } from 'src/models';
 import { PostService, PostServiceProvider } from 'src/services';
-import { provideIn } from 'src/utils';
+import { injectFrom } from 'src/utils';
 import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
   name: 'Post',
   setup() {
-    const postService = provideIn<PostService>(PostServiceProvider);
+    const postService = injectFrom<PostService>(PostServiceProvider, true);
 
     let posts = ref<Array<BlogPostDto>>([]);
     onMounted(async () => {

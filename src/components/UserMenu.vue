@@ -34,7 +34,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'UserMenu',
   setup() {
-    const authService = injectFrom<AuthService>(AuthServiceProvider.token);
+    const authService = injectFrom<AuthService>(AuthServiceProvider);
     const userService = provideIn<UserService>(UserServiceProvider);
 
     const currentUser = userService.currentUser;

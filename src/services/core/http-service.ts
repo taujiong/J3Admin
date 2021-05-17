@@ -39,7 +39,7 @@ export class HttpService {
   }
 
   async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
-    const response = await this._axiosInstance.post<T>(url, config);
+    const response = await this._axiosInstance.post<T>(url, data, config);
     return response.data;
   }
 

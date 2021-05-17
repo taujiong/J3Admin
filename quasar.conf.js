@@ -99,7 +99,8 @@ module.exports = configure(function(ctx) {
       plugins: [
         'AppFullscreen',
         'Loading',
-        'LocalStorage'
+        'LocalStorage',
+        'Notify'
       ]
     },
 

@@ -29,9 +29,9 @@ export default defineComponent({
     const languageService = provideIn<LanguageService>(LanguageServiceProvider);
     const languageRequestInterceptor = provideIn<HttpRequestInterceptor>(LanguageRequestInterceptorProvider);
 
-    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider.token);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider);
 
-    const httpService = injectFrom<HttpService>(HttpServiceProvider.token);
+    const httpService = injectFrom<HttpService>(HttpServiceProvider);
     httpService.useInterceptor(authRequestInterceptor);
     httpService.useInterceptor(languageRequestInterceptor);
 

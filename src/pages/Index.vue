@@ -22,14 +22,14 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   name: 'Index',
   setup() {
-    const authService = injectFrom<AuthService>(AuthServiceProvider.token);
-    const userService = injectFrom<UserService>(UserServiceProvider.token);
+    const authService = injectFrom<AuthService>(AuthServiceProvider);
+    const userService = injectFrom<UserService>(UserServiceProvider);
 
     const userName = ref(authService.isAuthenticated.value
       ? userService.currentUser.value.userName
       : 'Anonymous');
 
-    const navbarService = injectFrom<NavbarService>(NavbarServiceProvider.token);
+    const navbarService = injectFrom<NavbarService>(NavbarServiceProvider);
 
     const add = () => {
       navbarService.addItem([

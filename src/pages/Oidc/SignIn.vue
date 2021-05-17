@@ -16,8 +16,8 @@ import { useRouter } from 'vue-router';
 export default defineComponent({
   name: 'SignIn',
   setup() {
-    const authService = injectFrom<AuthService>(AuthServiceProvider.token);
-    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider.token);
+    const authService = injectFrom<AuthService>(AuthServiceProvider);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider);
     const router = useRouter();
 
     onMounted(() => {

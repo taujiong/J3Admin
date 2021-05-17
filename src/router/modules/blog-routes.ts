@@ -25,8 +25,19 @@ export const blogRoutes: RouteRecordRaw = {
     },
     {
       name: 'post-detail',
-      path: 'post/:postId',
+      path: 'post/preview/:postId',
       component: () => import('pages/Blog/PostDetail.vue'),
+      props: true
+    },
+    {
+      name: 'post-create',
+      path: 'post/create',
+      component: () => import('pages/Blog/PostEdit.vue')
+    },
+    {
+      name: 'post-edit',
+      path: 'post/edit/:postId',
+      component: () => import('pages/Blog/PostEdit.vue'),
       props: true
     }
   ]

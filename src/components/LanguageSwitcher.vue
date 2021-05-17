@@ -32,8 +32,8 @@ import { defineComponent, UnwrapRef } from 'vue';
 export default defineComponent({
   name: 'LanguageSwitcher',
   setup() {
-    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider.token);
-    const languageService = injectFrom<LanguageService>(LanguageServiceProvider.token);
+    const abpConfigurationService = injectFrom<AbpConfigurationService>(AbpConfigurationServiceProvider);
+    const languageService = injectFrom<LanguageService>(LanguageServiceProvider);
 
     const allLanguages = languageService.languages.value as LanguageInfo[];
     const currentLanguage = languageService.currentCulture;
