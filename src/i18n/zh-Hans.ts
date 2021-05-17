@@ -1,5 +1,7 @@
 export default {
   'Blogging': {
+    'Post:Delete': '删除文章',
+    'Post:DeleteConfirm': '你确定要删除文章"{postName}"吗？',
     'Post:Title': '标题',
     'Post:Description': '摘要',
     'Post:Count': '你还没有写文章 | 你已经写了 1 篇文章 | 你已经写了 {n} 篇文章',

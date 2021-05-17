@@ -1,11 +1,11 @@
 <template>
   <q-page class="q-gutter-y-md" padding>
-    <q-input v-model="title" :label="$t('Blogging.Post:Title')" filled model-value="">
+    <q-input v-model="title" :label="t('Blogging.Post:Title')" filled model-value="">
       <template #after>
-        <q-btn :label="$t('Blogging.Submit')" @click="submit" />
+        <q-btn :label="t('Blogging.Submit')" @click="submit" />
       </template>
     </q-input>
-    <q-input v-model="description" :label="$t('Blogging.Post:Description')" filled model-value="" type="textarea" />
+    <q-input v-model="description" :label="t('Blogging.Post:Description')" filled model-value="" type="textarea" />
     <div id="post"></div>
   </q-page>
 </template>
@@ -18,6 +18,7 @@ import { PostService, PostServiceProvider } from 'src/services';
 import { injectFrom } from 'src/utils';
 import Vditor from 'vditor';
 import { defineComponent, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'PostEdit',
@@ -30,6 +31,7 @@ export default defineComponent({
   setup(props) {
     const postService = injectFrom<PostService>(PostServiceProvider, true);
     const $q = useQuasar();
+    const { t } = useI18n();
 
     let editor: Vditor;
     const title = ref('');
@@ -81,7 +83,7 @@ export default defineComponent({
       }
     }
 
-    return { title, description, submit };
+    return { title, description, submit, t };
   }
 });
 </script>

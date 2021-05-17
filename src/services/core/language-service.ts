@@ -36,10 +36,10 @@ export class LanguageService {
 
   updateI18n() {
     if (!this.messages) return;
-    const locale = this.currentCulture.value?.cultureName ?? defaultLanguageKey;
-    const i18nRoot = i18n.global;
-    i18nRoot.mergeLocaleMessage(locale, this.messages.value);
-    i18nRoot.locale = locale;
+    const currentLocale = this.currentCulture.value?.cultureName ?? defaultLanguageKey;
+    const { locale, mergeLocaleMessage } = i18n.global;
+    mergeLocaleMessage(currentLocale, this.messages.value);
+    locale.value = currentLocale;
   }
 
   saveState() {
