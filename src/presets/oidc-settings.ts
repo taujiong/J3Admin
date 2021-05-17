@@ -8,8 +8,7 @@ export const oidcSettings: UserManagerSettings = {
   client_secret: process.env.DEV ? 'dev_admin' : 'secret',
   redirect_uri: `${ appBaseUrl }/oidc/signin`,
   post_logout_redirect_uri: `${ appBaseUrl }/oidc/signout`,
-  silent_redirect_uri: `${ appBaseUrl }/oidc/renew`,
   automaticSilentRenew: true,
   response_type: 'code',
-  scope: 'openid profile offline_access J3Admin J3Blogging J3Guard'
+  scope: 'openid profile J3Admin J3Blogging J3Guard'
 };
