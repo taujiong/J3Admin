@@ -19,7 +19,9 @@
 
           <q-item-section side>
             <div class="q-gutter-xs">
-              <q-btn class="gt-xs" dense flat icon="remove_red_eye" round size="16px"></q-btn>
+              <q-btn :to="{name: 'post-detail', params: {postId: post.id}}" class="gt-xs" dense flat
+                     icon="remove_red_eye" round
+                     size="16px" />
               <q-btn class="gt-xs" dense flat icon="mode_edit" round size="16px"></q-btn>
               <q-btn class="gt-xs" dense flat icon="delete" round size="16px"></q-btn>
             </div>

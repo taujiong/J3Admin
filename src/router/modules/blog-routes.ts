@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
 export const blogRoutes: RouteRecordRaw = {
-  name: 'blog',
-  path: '/blog',
+  name: 'blogging',
+  path: '/blogging',
   component: () => import('layouts/MainLayout.vue'),
   meta: {
     requiredPolicy: 'Blogging.Post || Blogging.Blob',
@@ -12,16 +12,22 @@ export const blogRoutes: RouteRecordRaw = {
   },
   children: [
     {
-      name: 'post',
-      path: 'post',
-      component: () => import('pages/Blog/Post.vue'),
+      name: 'post-list',
+      path: 'posts',
+      component: () => import('pages/Blog/PostList.vue'),
       meta: {
         requiredPolicy: 'Blogging.Post',
         showInNavbar: true,
         iconName: 'feed',
-        parentName: 'blog',
+        parentName: 'blogging',
         displayNameKey: 'Blogging.Permission:PostManagement'
       }
+    },
+    {
+      name: 'post-detail',
+      path: 'post/:postId',
+      component: () => import('pages/Blog/PostDetail.vue'),
+      props: true
     }
   ]
 };
