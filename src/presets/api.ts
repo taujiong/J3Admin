@@ -8,5 +8,6 @@ export const enum eApiUrl {
   IdentityServerApiResource = '/api/ids/api-resources',
   IdentityServerIdentityResource = '/api/ids/identity-resources',
   IdentityServerApiScope = '/api/ids/api-scopes',
-  BlogPost = '/api/blogging/posts'
+  BlogPost = '/api/blogging/posts',
+  BlogFile = '/api/blogging/files'
 }

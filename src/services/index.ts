@@ -2,6 +2,7 @@ export * from './core/http-service';
 export * from './core/abp-configuration-service';
 export * from './core/auth-service';
 export * from './blog/post-service';
+export * from './blog/file-service';
 export * from './core/language-service';
 export * from './core/navbar-service';
 export * from './core/permission-service';

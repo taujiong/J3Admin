@@ -13,8 +13,8 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { BlogPostWithDetailDto } from 'src/models';
-import { defaultVditorOptions } from 'src/presets';
-import { PostService, PostServiceProvider } from 'src/services';
+import { defaultVditorOptions, eApiUrl } from 'src/presets';
+import { FileService, FileServiceProvider, PostService, PostServiceProvider } from 'src/services';
 import { injectFrom } from 'src/utils';
 import Vditor from 'vditor';
 import { defineComponent, onMounted, ref } from 'vue';
@@ -30,6 +30,7 @@ export default defineComponent({
   },
   setup(props) {
     const postService = injectFrom<PostService>(PostServiceProvider, true);
+    const fileService = injectFrom<FileService>(FileServiceProvider, true);
     const $q = useQuasar();
     const { t } = useI18n();
 
@@ -37,6 +38,23 @@ export default defineComponent({
     const title = ref('');
     const description = ref('');
     let post: BlogPostWithDetailDto;
+
+    const vditorOptions: IOptions = {
+      upload: {
+        accept: 'image/*',
+        handler(files: File[]): string | null {
+          for (const file of files) {
+            void fileService.uploadFile(file)
+              .then(fileName => {
+                const fileUrl = `![${ fileName }](${ eApiUrl.BlogFile }/www/${ fileName })`;
+                editor.insertValue(fileUrl, false);
+              });
+          }
+
+          return '';
+        }
+      }
+    };
 
     onMounted(async () => {
       editor = new Vditor('post', defaultVditorOptions);
