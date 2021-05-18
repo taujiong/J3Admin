@@ -2,7 +2,6 @@ import {
   IdentityRoleCreateDto,
   IdentityRoleDto,
   IdentityRoleUpdateDto,
-  ListResultDto,
   PagedAndSortedResultRequestDto,
   PagedResultDto,
   TypeProvider,
@@ -29,7 +28,7 @@ export class RoleService {
 
   async getRoles(input?: PagedAndSortedResultRequestDto) {
     const config = { params: input };
-    return await this._httpService.get<ListResultDto<IdentityRoleDto>>(this.baseUrl, config);
+    return await this._httpService.get<PagedResultDto<IdentityRoleDto>>(this.baseUrl, config);
   }
 
   async createRole(input: IdentityRoleCreateDto) {
@@ -42,8 +41,8 @@ export class RoleService {
   }
 
   async updateRole(id: string, input: IdentityRoleUpdateDto) {
-    const config = { params: input };
-    return await this._httpService.get<PagedResultDto<IdentityRoleDto>>(this.baseUrl, config);
+    const _url = `${ this.baseUrl }/${ id }`;
+    return await this._httpService.put<IdentityRoleDto>(_url, input);
   }
 
   async deleteRole(id: string) {

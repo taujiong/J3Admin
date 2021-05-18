@@ -39,11 +39,11 @@ export type ExtensibleFullAuditedEntityDto<TPrimaryKey = string> =
   & FullAuditedEntityDto<TPrimaryKey>;
 
 export interface ListResultDto<T> {
-  items?: T[];
+  items: T[];
 }
 
 export interface PagedResultDto<T> extends ListResultDto<T> {
-  totalCount?: number;
+  totalCount: number;
 }
 
 export interface PagedAndSortedResultRequestDto {

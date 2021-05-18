@@ -4,6 +4,8 @@ import {
   BlogPostUpdateDto,
   BlogPostWithDetailDto,
   ListResultDto,
+  PagedAndSortedResultRequestDto,
+  PagedResultDto,
   TypeProvider
 } from 'src/models';
 import { eApiUrl } from 'src/presets';
@@ -22,8 +24,9 @@ export class PostService {
     return await this._httpService.get<BlogPostWithDetailDto>(_url);
   }
 
-  async getPosts() {
-    return await this._httpService.get<ListResultDto<BlogPostDto>>(this.baseUrl);
+  async getPosts(input?: PagedAndSortedResultRequestDto) {
+    const config = { params: input };
+    return await this._httpService.get<PagedResultDto<BlogPostDto>>(this.baseUrl, config);
   }
 
   async getPostsByTag(tag: string) {
