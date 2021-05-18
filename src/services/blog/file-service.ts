@@ -1,4 +1,4 @@
-import { TypeProvider } from 'src/models';
+import { FileUploadResult, TypeProvider } from 'src/models';
 import { eApiUrl } from 'src/presets';
 import { HttpService, HttpServiceProvider } from 'src/services';
 
@@ -23,7 +23,7 @@ export class FileService {
   async uploadFile(file: File) {
     const formData = new FormData();
     formData.append('file', file);
-    return await this._httpService.post<string>(this.baseUrl, formData);
+    return await this._httpService.post<FileUploadResult>(this.baseUrl, formData);
   }
 }
 

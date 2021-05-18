@@ -4,6 +4,7 @@ export * from './common';
 export * from './culture';
 export * from './dependency-inject-provider';
 export * from './dtos';
+export * from './file';
 export * from './identity-user';
 export * from './identity-role';
 export * from './multi-tenancy';

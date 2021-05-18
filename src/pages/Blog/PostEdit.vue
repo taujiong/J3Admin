@@ -13,7 +13,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { BlogPostWithDetailDto } from 'src/models';
-import { defaultVditorOptions, eApiUrl } from 'src/presets';
+import { defaultVditorOptions } from 'src/presets';
 import { FileService, FileServiceProvider, PostService, PostServiceProvider } from 'src/services';
 import { injectFrom } from 'src/utils';
 import Vditor from 'vditor';
@@ -45,9 +45,9 @@ export default defineComponent({
         handler(files: File[]): string | null {
           for (const file of files) {
             void fileService.uploadFile(file)
-              .then(fileName => {
-                const fileUrl = `![${ fileName }](${ eApiUrl.BlogFile }/www/${ fileName })`;
-                editor.insertValue(fileUrl, false);
+              .then(fileResult => {
+                const fileUrl = `![${ fileResult.rawName }](${ process.env.API_BASE_URL }${ fileResult.webUrl })`;
+                editor.insertValue(fileUrl, true);
               });
           }
 
@@ -57,7 +57,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      editor = new Vditor('post', defaultVditorOptions);
+      editor = new Vditor('post', { ...defaultVditorOptions, ...vditorOptions });
       if (props.postId) {
         post = await postService.getPostById(props.postId);
         title.value = post.title;
