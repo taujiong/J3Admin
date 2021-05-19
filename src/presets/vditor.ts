@@ -31,7 +31,7 @@ export const defaultPreviewOptions: IPreviewOptions = {
 };
 
 export const defaultVditorOptions: IOptions = {
-  mode: 'sv',
+  mode: 'ir',
   outline: {
     enable: true,
     position: 'left'

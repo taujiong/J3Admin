@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <q-list padding>
+    <q-list>
       <q-item>
         <q-item-section>
           <q-item-label class="text-h5">{{ t('Blogging.Post:Count', posts.totalCount) }}</q-item-label>
@@ -13,13 +13,14 @@
         </q-item-section>
       </q-item>
 
-      <q-separator spaced="md" />
-
       <template v-for="post of posts.items" :key="post.id">
+        <q-separator spaced="sm" />
+
         <q-item>
           <q-item-section>
-            <q-item-label class="text-primary text-h5 q-pb-md">{{ post.title }}</q-item-label>
-            <q-item-label class="text-body1" lines="2" style="line-height: 1.8!important;">{{ post.description }}
+            <q-item-label class="text-primary text-h5 q-pb-sm">{{ post.title }}</q-item-label>
+            <q-item-label class="text-body1" lines="3" style="line-height: 1.8!important;">
+              {{ post.description }}
             </q-item-label>
           </q-item-section>
 
@@ -40,10 +41,16 @@
             </div>
           </q-item-section>
         </q-item>
-
-        <q-separator spaced="xl" />
       </template>
     </q-list>
+
+    <div class="row justify-center">
+      <q-pagination v-if="maxPage > 1"
+                    v-model="currentPage"
+                    :max="maxPage"
+                    :model-value="currentPage"
+                    input />
+    </div>
   </q-page>
 </template>
 
@@ -52,7 +59,7 @@ import { useQuasar } from 'quasar';
 import { BlogPostDto, PagedResultDto } from 'src/models';
 import { PostService, PostServiceProvider } from 'src/services';
 import { injectFrom } from 'src/utils';
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
@@ -62,12 +69,12 @@ export default defineComponent({
     const $q = useQuasar();
     const { t } = useI18n();
 
+    const maxResultCount = 5;
     let posts = ref(<PagedResultDto<BlogPostDto>>{});
-    onMounted(async () => {
-      posts.value = await postService.getPosts({ MaxResultCount: 20 });
-    });
+    const currentPage = ref(1);
+    const maxPage = computed(() => Math.ceil(posts.value.totalCount / maxResultCount));
 
-    function deletePost(post: BlogPostDto) {
+    const deletePost = (post: BlogPostDto) => {
       $q.dialog({
         title: t('Blogging.Post:Delete'),
         message: t('Blogging.Post:DeleteConfirm', { postName: post.title }),
@@ -75,11 +82,20 @@ export default defineComponent({
         persistent: true
       }).onOk(async () => {
         await postService.deletePost(post.id);
-        posts.value = await postService.getPosts({ MaxResultCount: 20 });
+        posts.value = await postService.getPosts({ maxResultCount });
       });
-    }
+    };
 
-    return { posts, deletePost, t };
+    watch<number>(currentPage, async newPage => {
+      const skipCount = (newPage - 1) * maxResultCount;
+      posts.value = await postService.getPosts({ maxResultCount, skipCount });
+    });
+
+    onMounted(async () => {
+      posts.value = await postService.getPosts({ maxResultCount });
+    });
+
+    return { posts, deletePost, t, maxPage, currentPage };
   }
 });
 </script>
