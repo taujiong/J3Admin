@@ -1,4 +1,9 @@
 export default {
+  'AbpIdentity': {
+    'User:Delete': '删除用户',
+    'User:Create': '创建用户',
+    'User:Edit': '编辑用户'
+  },
   'Blogging': {
     'Post:Delete': '删除文章',
     'Post:DeleteConfirm': '你确定要删除文章"{postName}"吗？',

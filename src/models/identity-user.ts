@@ -37,6 +37,8 @@ export interface IdentityUserUpdateRolesDto {
   roleNames: Array<string>;
 }
 
+export type IdentityUserWithRoleNames = IdentityUserDto & IdentityUserUpdateRolesDto;
+
 export const IdentityUserTableColumn: Array<QTableColumn> = [
   {
     name: 'userName',

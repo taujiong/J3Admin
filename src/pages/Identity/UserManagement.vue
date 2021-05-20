@@ -65,7 +65,7 @@
           <q-td auto-width>
             <q-btn-dropdown :label="t('AbpIdentity.DatatableActionDropdownDefaultText')" icon="settings">
               <q-list>
-                <q-item v-close-popup clickable>
+                <q-item v-close-popup clickable @click="editUser">
                   <q-item-section>
                     <q-item-label>{{ t('AbpIdentity.Edit') }}</q-item-label>
                   </q-item-section>
@@ -77,7 +77,7 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-close-popup clickable>
+                <q-item v-close-popup clickable @click="deleteUser(props.row)">
                   <q-item-section>
                     <q-item-label>{{ t('AbpIdentity.Delete') }}</q-item-label>
                   </q-item-section>
@@ -88,12 +88,17 @@
         </q-tr>
       </template>
     </q-table>
+
+    <q-dialog v-model="edit" persistent>
+      <UserEdition />
+    </q-dialog>
   </q-page>
 </template>
 
 <script lang="ts">
-import { QTable } from 'quasar';
-import { IdentityUserDto, IdentityUserTableColumn, IdentityUserUpdateRolesDto, QTablePagination } from 'src/models';
+import UserEdition from 'components/UserEdition.vue';
+import { QTable, useQuasar } from 'quasar';
+import { IdentityUserTableColumn, IdentityUserWithRoleNames, QTablePagination } from 'src/models';
 import { UserService, UserServiceProvider } from 'src/services';
 import { injectFrom } from 'src/utils';
 import { defineComponent, onMounted, ref } from 'vue';
@@ -101,13 +106,16 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'UserManagement',
+  components: { UserEdition },
   setup() {
     const userService = injectFrom<UserService>(UserServiceProvider);
     const { t } = useI18n();
+    const $q = useQuasar();
 
+    const edit = ref(true);
     const loading = ref(true);
     const columns = IdentityUserTableColumn;
-    const rows = ref<Array<IdentityUserDto & IdentityUserUpdateRolesDto>>([]);
+    const rows = ref<Array<IdentityUserWithRoleNames>>([]);
     const pagination = ref<QTablePagination>({
       sortBy: 'userName',
       descending: false,
@@ -139,11 +147,27 @@ export default defineComponent({
       pagination.value.rowsNumber = users.totalCount;
     };
 
+    const deleteUser = (user: IdentityUserWithRoleNames) => {
+      $q.dialog({
+        title: t('AbpIdentity.User:Delete'),
+        message: t('AbpIdentity.UserDeletionConfirmationMessage', [user.userName]),
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        await userService.deleteUser(user.id);
+        await fetchUsers({ pagination: pagination.value });
+      });
+    };
+
+    const editUser = () => {
+      edit.value = true;
+    };
+
     onMounted(async () => {
       await fetchUsers({ pagination: pagination.value });
     });
 
-    return { columns, rows, pagination, fetchUsers, loading, t };
+    return { columns, rows, pagination, fetchUsers, deleteUser, editUser, loading, t, edit };
   }
 });
 </script>

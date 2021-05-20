@@ -1,4 +1,9 @@
 export default {
+  'AbpIdentity': {
+    'User:Delete': 'Delete user',
+    'User:Create': 'Create user',
+    'User:Edit': 'Edit user'
+  },
   'Blogging': {
     'Post:Delete': 'Delete post',
     'Post:DeleteConfirm': 'Are you sure to delete post "{postName}"?',
