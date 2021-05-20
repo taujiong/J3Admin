@@ -47,7 +47,7 @@ export interface PagedResultDto<T> extends ListResultDto<T> {
 }
 
 export interface PagedAndSortedResultRequestDto {
-  sorting?: number;
+  sorting?: string;
   skipCount?: number;
   maxResultCount?: number;
 }

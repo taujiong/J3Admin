@@ -11,4 +11,5 @@ export * from './multi-tenancy';
 export * from './navbar-item';
 export * from './object-extension';
 export * from './permission';
+export * from './quasar';
 export * from './user-profile';

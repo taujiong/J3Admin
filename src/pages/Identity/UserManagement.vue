@@ -1,11 +1,10 @@
 <template>
   <q-page padding>
     <q-table :columns="columns"
-             :pagination="{rowsPerPage: 10}"
-             :rows="rows"
-             row-key="userName"
-             title="Users"
-             title-class="text-h5"
+             v-model:pagination="pagination" :loading="loading"
+             :rows="rows" row-key="userName"
+             title="Users" title-class="text-h5"
+             @request="fetchUsers"
     >
       <template #body-cell-actions="props">
         <q-td :props="props" auto-width>
@@ -37,129 +36,56 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { QTable } from 'quasar';
+import { IdentityUserDto, IdentityUserTableColumn, IdentityUserUpdateRolesDto, QTablePagination } from 'src/models';
+import { UserService, UserServiceProvider } from 'src/services';
+import { injectFrom } from 'src/utils';
+import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
   name: 'UserManagement',
   setup() {
-    const columns = [
-      {
-        name: 'userName',
-        required: true,
-        label: 'userName',
-        align: 'left',
-        field: 'userName'
-      },
-      {
-        name: 'email',
-        required: true,
-        label: 'email',
-        align: 'left',
-        field: 'email'
-      },
-      {
-        name: 'phoneNumber',
-        required: true,
-        label: 'phone',
-        align: 'left',
-        field: 'phoneNumber'
-      },
-      {
-        name: 'roles',
-        required: true,
-        label: 'roles',
-        align: 'left',
-        field: 'roles',
-        format: (value: Array<string>) => value.join(',')
-      },
-      {
-        name: 'actions',
-        label: 'actions',
-        align: 'left'
-      }
-    ];
+    const userService = injectFrom<UserService>(UserServiceProvider);
 
-    const rows = [
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'taujiong',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'jy',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'dsd',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'dr',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'xt',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'gd',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'sjj',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'gz',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'wlt',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'lyh',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      },
-      {
-        id: '39fc37cf-203c-4428-04f8-60f6068f29ac',
-        userName: 'wsy',
-        email: 'taujiong@outlook.com',
-        phoneNumber: '13182933382',
-        roles: ['admin', 'member']
-      }
-    ];
+    const loading = ref(true);
+    const columns = IdentityUserTableColumn;
+    const rows = ref<Array<IdentityUserDto & IdentityUserUpdateRolesDto>>([]);
+    const pagination = ref<QTablePagination>({
+      sortBy: 'userName',
+      descending: false,
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: 16
+    });
 
-    return { columns, rows };
+    const fetchUsers = async (props: Partial<QTable>) => {
+      loading.value = true;
+      let { page, rowsPerPage, sortBy, descending } = props.pagination as QTablePagination;
+      if (rowsPerPage === 0) rowsPerPage = 1000;
+      const skipCount = (page - 1) * rowsPerPage;
+
+      const users = await userService.getUsers({ skipCount, maxResultCount: rowsPerPage, sorting: sortBy });
+      const tempRow = [];
+      for (const user of users.items) {
+        const roles = await userService.getRolesByUser(user.id);
+        const roleNames = roles.items.map(role => role.name);
+        tempRow.push({ ...user, roleNames });
+      }
+      rows.value = tempRow;
+
+      loading.value = false;
+      pagination.value.sortBy = sortBy;
+      pagination.value.descending = descending;
+      pagination.value.page = page;
+      pagination.value.rowsPerPage = rowsPerPage;
+      pagination.value.rowsNumber = users.totalCount;
+    };
+
+    onMounted(async () => {
+      await fetchUsers({ pagination: pagination.value });
+    });
+
+    return { columns, rows, pagination, fetchUsers, loading };
   }
 });
 </script>
