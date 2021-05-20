@@ -41,36 +41,29 @@ export const IdentityUserTableColumn: Array<QTableColumn> = [
   {
     name: 'userName',
     required: true,
-    label: 'userName',
+    label: 'AbpIdentity.UserName',
     align: 'left',
     field: 'userName'
   },
   {
     name: 'email',
     required: true,
-    label: 'email',
+    label: 'AbpIdentity.EmailAddress',
     align: 'left',
     field: 'email'
   },
   {
     name: 'phoneNumber',
     required: true,
-    label: 'phone',
+    label: 'AbpIdentity.PhoneNumber',
     align: 'left',
     field: 'phoneNumber'
   },
   {
     name: 'roles',
     required: true,
-    label: 'roles',
+    label: 'AbpIdentity.Roles',
     align: 'left',
-    field: 'roleNames',
-    format: (value: Array<string>) => value.join(',')
-  },
-  {
-    name: 'actions',
-    label: 'actions',
-    align: 'left',
-    field: 'null'
+    field: 'roleNames'
   }
 ];
