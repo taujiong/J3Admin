@@ -2,7 +2,10 @@ export default {
   'AbpIdentity': {
     'User:Delete': '删除用户',
     'User:Create': '创建用户',
-    'User:Edit': '编辑用户'
+    'User:Edit': '编辑用户',
+    'Role:Delete': '删除角色',
+    'Role:Create': '创建角色',
+    'Role:Edit': '编辑角色'
   },
   'Blogging': {
     'Post:Delete': '删除文章',

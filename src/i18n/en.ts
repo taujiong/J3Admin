@@ -2,7 +2,10 @@ export default {
   'AbpIdentity': {
     'User:Delete': 'Delete user',
     'User:Create': 'Create user',
-    'User:Edit': 'Edit user'
+    'User:Edit': 'Edit user',
+    'Role:Delete': 'Delete role',
+    'Role:Create': 'Create role',
+    'Role:Edit': 'Edit role'
   },
   'Blogging': {
     'Post:Delete': 'Delete post',
