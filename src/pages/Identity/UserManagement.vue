@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <q-table :columns="columns"
-             v-model:pagination="pagination" :loading="loading"
+    <q-table v-model:pagination="pagination"
+             :columns="columns" :loading="loading"
              :rows="rows" row-key="userName"
              @request="fetchUsers"
     >
@@ -43,9 +43,9 @@
                     size="sm"
             >
               <q-tooltip anchor="center right" self="center left">
-                <span
-                  class="text-body2">{{ props.row.email_verified ? t('AbpIdentity.Verified') : t('AbpIdentity.Unverified')
-                                     }}</span>
+                <span class="text-body2">
+                  {{ props.row.email_verified ? t('AbpIdentity.Verified') : t('AbpIdentity.Unverified') }}
+                </span>
               </q-tooltip>
             </q-icon>
           </q-td>
@@ -82,7 +82,7 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-close-popup clickable>
+                <q-item v-close-popup clickable @click="changePermission(props.row)">
                   <q-item-section>
                     <q-item-label>{{ t('AbpIdentity.Permission:ChangePermissions') }}</q-item-label>
                   </q-item-section>
@@ -103,6 +103,7 @@
 </template>
 
 <script lang="ts">
+import PermissionChanger from 'components/PermissionChanger.vue';
 import UserEdition from 'components/UserEdition.vue';
 import { QTable, useQuasar } from 'quasar';
 import { IdentityUserTableColumn, IdentityUserWithRoleNames, QTablePagination } from 'src/models';
@@ -171,6 +172,13 @@ export default defineComponent({
       }).onOk(fetchUsers);
     };
 
+    const changePermission = (user: IdentityUserWithRoleNames) => {
+      $q.dialog({
+        component: PermissionChanger,
+        componentProps: { providerName: 'U', providerKey: user.id }
+      });
+    };
+
     const createUser = () => {
       $q.dialog({
         component: UserEdition
@@ -179,9 +187,10 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchUsers();
+      changePermission(rows.value[0]);
     });
 
-    return { columns, rows, pagination, fetchUsers, deleteUser, createUser, editUser, loading, t };
+    return { columns, rows, pagination, fetchUsers, deleteUser, createUser, editUser, changePermission, loading, t };
   }
 });
 </script>

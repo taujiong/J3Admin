@@ -1,9 +1,10 @@
 import { Factory } from 'src/models';
 
-export interface TreeNode<T> {
-  data: T,
-  parent?: TreeNode<T>
-  children: TreeNode<T>[],
+export type TreeNode<T> = {
+  [key in keyof T]: T[key];
+} & {
+  parent?: TreeNode<T>;
+  children: TreeNode<T>[];
   depth: number,
   isLeaf: boolean
 }
@@ -57,11 +58,12 @@ export function createTreeFromList<T, R extends TreeNode<unknown>>(
   return tree;
 }
 
-export function toTreeNode<T>(item: T) {
-  return {
-    data: item,
+export function toTreeNode<T>(item: T): TreeNode<T> {
+  const treeNode = {
     children: [],
     depth: 0,
     isLeaf: true
-  } as TreeNode<T>;
+  };
+
+  return Object.assign(treeNode, item);
 }

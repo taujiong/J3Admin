@@ -21,7 +21,7 @@ export class NavbarService {
       item => !this.shouldHide(item)
     );
     const tree = this.createTree(availableItems);
-    return tree.filter(item => item.children.length > 0 || item.data.path);
+    return tree.filter(item => item.children.length > 0 || item.path);
   });
 
   private shouldHide(item: NavbarItem) {

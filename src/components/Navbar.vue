@@ -2,22 +2,22 @@
   <q-list>
     <template v-for="item of availableItems">
       <q-expansion-item v-if="item.children.length > 0"
-                        :key="item.data.key + item.children.length"
+                        :key="item.key + item.children.length"
                         :content-inset-level="(item.depth + 1) * 0.25"
-                        :icon="item.data.iconName"
-                        :label="t(item.data.displayNameKey)"
+                        :icon="item.iconName"
+                        :label="t(item.displayNameKey)"
       >
         <Navbar :items="item.children"></Navbar>
       </q-expansion-item>
       <q-item v-else
-              :key="item.data.key"
-              :to="item.data.path"
+              :key="item.key"
+              :to="item.path"
       >
         <q-item-section avatar>
-          <q-icon :name="item.data.iconName"></q-icon>
+          <q-icon :name="item.iconName"></q-icon>
         </q-item-section>
         <q-item-section>
-          <q-item-label v-t="item.data.displayNameKey"></q-item-label>
+          <q-item-label v-t="item.displayNameKey"></q-item-label>
         </q-item-section>
       </q-item>
     </template>
