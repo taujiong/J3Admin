@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import RoleEdit from 'components/RoleEdit.vue';
+import RoleEdit from 'components/RoleEdition.vue';
 import { QTable, useQuasar } from 'quasar';
 import { IdentityRoleDto, IdentityRoleTableColumn, IdentityRoleUpdateDto, QTablePagination } from 'src/models';
 import { RoleService, RoleServiceProvider } from 'src/services';

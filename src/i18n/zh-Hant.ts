@@ -5,7 +5,9 @@ export default {
     'User:Edit': '編輯用戶',
     'Role:Delete': '刪除角色',
     'Role:Create': '創建角色',
-    'Role:Edit': '編輯角色'
+    'Role:Edit': '編輯角色',
+    'Verified': '已驗證',
+    'Unverified': '未驗證'
   },
   'Blogging': {
     'Post:Delete': '刪除文章',

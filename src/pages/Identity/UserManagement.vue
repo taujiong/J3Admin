@@ -43,7 +43,9 @@
                     size="sm"
             >
               <q-tooltip anchor="center right" self="center left">
-                <span class="text-body2">{{ props.row.email_verified ? 'verified' : 'unverified' }}</span>
+                <span
+                  class="text-body2">{{ props.row.email_verified ? t('AbpIdentity.Verified') : t('AbpIdentity.Unverified')
+                                     }}</span>
               </q-tooltip>
             </q-icon>
           </q-td>
@@ -55,7 +57,7 @@
             >
               <q-tooltip anchor="center right" self="center left">
                 <span class="text-body2">
-                  {{ props.row.email_verified ? 'verified' : 'unverified' }}
+                  {{ props.row.email_verified ? t('AbpIdentity.Verified') : t('AbpIdentity.Unverified') }}
                 </span>
               </q-tooltip>
             </q-icon>

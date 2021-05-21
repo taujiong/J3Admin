@@ -5,7 +5,9 @@ export default {
     'User:Edit': 'Edit user',
     'Role:Delete': 'Delete role',
     'Role:Create': 'Create role',
-    'Role:Edit': 'Edit role'
+    'Role:Edit': 'Edit role',
+    'Verified': 'verified',
+    'Unverified': 'unverified'
   },
   'Blogging': {
     'Post:Delete': 'Delete post',
