@@ -3,9 +3,18 @@
     <q-table :columns="columns"
              v-model:pagination="pagination" :loading="loading"
              :rows="rows" row-key="userName"
-             :title="t('AbpIdentity.Users')" title-class="text-h5"
              @request="fetchUsers"
     >
+      <!-- 表头部区域 -->
+      <template #top>
+        <span v-t="'AbpIdentity.Users'" class="text-h5" />
+        <q-space />
+        <q-btn :label="t('AbpIdentity.User:Create')"
+               color="primary"
+               @click="createUser"
+        />
+      </template>
+
       <!-- 表头 -->
       <template #header="props">
         <q-tr :props="props">
@@ -65,7 +74,7 @@
           <q-td auto-width>
             <q-btn-dropdown :label="t('AbpIdentity.DatatableActionDropdownDefaultText')" icon="settings">
               <q-list>
-                <q-item v-close-popup clickable @click="editUser">
+                <q-item v-close-popup clickable @click="editUser(props.row)">
                   <q-item-section>
                     <q-item-label>{{ t('AbpIdentity.Edit') }}</q-item-label>
                   </q-item-section>
@@ -88,10 +97,6 @@
         </q-tr>
       </template>
     </q-table>
-
-    <q-dialog v-model="edit" persistent>
-      <UserEdition />
-    </q-dialog>
   </q-page>
 </template>
 
@@ -106,13 +111,11 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'UserManagement',
-  components: { UserEdition },
   setup() {
     const userService = injectFrom<UserService>(UserServiceProvider);
     const { t } = useI18n();
     const $q = useQuasar();
 
-    const edit = ref(true);
     const loading = ref(true);
     const columns = IdentityUserTableColumn;
     const rows = ref<Array<IdentityUserWithRoleNames>>([]);
@@ -121,10 +124,10 @@ export default defineComponent({
       descending: false,
       page: 1,
       rowsPerPage: 10,
-      rowsNumber: 16
+      rowsNumber: 0
     });
 
-    const fetchUsers = async (props: Partial<QTable>) => {
+    const fetchUsers = async (props: Partial<QTable> = { pagination: pagination.value }) => {
       loading.value = true;
       let { page, rowsPerPage, sortBy, descending } = props.pagination as QTablePagination;
       if (rowsPerPage === 0) rowsPerPage = 1000;
@@ -155,19 +158,28 @@ export default defineComponent({
         persistent: true
       }).onOk(async () => {
         await userService.deleteUser(user.id);
-        await fetchUsers({ pagination: pagination.value });
+        await fetchUsers();
       });
     };
 
-    const editUser = () => {
-      edit.value = true;
+    const editUser = (user: IdentityUserWithRoleNames) => {
+      $q.dialog({
+        component: UserEdition,
+        componentProps: { user }
+      }).onOk(fetchUsers);
+    };
+
+    const createUser = () => {
+      $q.dialog({
+        component: UserEdition
+      }).onOk(fetchUsers);
     };
 
     onMounted(async () => {
-      await fetchUsers({ pagination: pagination.value });
+      await fetchUsers();
     });
 
-    return { columns, rows, pagination, fetchUsers, deleteUser, editUser, loading, t, edit };
+    return { columns, rows, pagination, fetchUsers, deleteUser, createUser, editUser, loading, t };
   }
 });
 </script>

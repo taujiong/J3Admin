@@ -1,10 +1,10 @@
-import { ExtensibleFullAuditedEntityDto, ExtensibleObject, QTableColumn } from 'src/models';
+import { ExtensibleFullAuditedEntityDto, QTableColumn } from 'src/models';
 
 export interface IdentityUserCreateDto extends IdentityUserCreateOrUpdateDtoBase {
   password: string;
 }
 
-export interface IdentityUserCreateOrUpdateDtoBase extends ExtensibleObject {
+export interface IdentityUserCreateOrUpdateDtoBase {
   userName: string;
   name: string;
   surname: string;
