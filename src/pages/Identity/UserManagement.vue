@@ -187,7 +187,6 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchUsers();
-      changePermission(rows.value[0]);
     });
 
     return { columns, rows, pagination, fetchUsers, deleteUser, createUser, editUser, changePermission, loading, t };

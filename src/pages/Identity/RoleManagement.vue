@@ -46,7 +46,7 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-close-popup clickable>
+                <q-item v-close-popup clickable @click="changePermission(props.row)">
                   <q-item-section>
                     <q-item-label>{{ t('AbpIdentity.Permission:ChangePermissions') }}</q-item-label>
                   </q-item-section>
@@ -67,6 +67,7 @@
 </template>
 
 <script lang="ts">
+import PermissionChanger from 'components/PermissionChanger.vue';
 import RoleEdit from 'components/RoleEdition.vue';
 import { QTable, useQuasar } from 'quasar';
 import { IdentityRoleDto, IdentityRoleTableColumn, IdentityRoleUpdateDto, QTablePagination } from 'src/models';
@@ -110,6 +111,13 @@ export default defineComponent({
       pagination.value.rowsNumber = roles.totalCount;
     };
 
+    const changePermission = (role: IdentityRoleDto) => {
+      $q.dialog({
+        component: PermissionChanger,
+        componentProps: { providerName: 'R', providerKey: role.name }
+      });
+    };
+
     const deleteRole = (role: IdentityRoleDto) => {
       $q.dialog({
         title: t('AbpIdentity.Role:Delete'),
@@ -139,7 +147,7 @@ export default defineComponent({
       await fetchRoles();
     });
 
-    return { columns, rows, pagination, fetchRoles, deleteRole, createRole, editRole, loading, t };
+    return { columns, rows, pagination, fetchRoles, changePermission, deleteRole, createRole, editRole, loading, t };
   }
 });
 </script>
